@@ -7,6 +7,24 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+  import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBozAVw0h6T4vEzJR7hpZ-FqvykqPl4Vu4",
+    authDomain: "quality-dashboard-2026-ca0c8.firebaseapp.com",
+    projectId: "quality-dashboard-2026-ca0c8",
+    storageBucket: "quality-dashboard-2026-ca0c8.firebasestorage.app",
+    messagingSenderId: "269007785490",
+    appId: "1:269007785490:web:d39701b3bd1036a95992cb"
+  };
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const docRef = doc(db, "dashboard", "content");
+
+  window.__fb = { db, docRef, getDoc, setDoc };
+</script>
 <style>
   :root{
     --bg: #eef1f6;
@@ -131,6 +149,21 @@
   .a-list li b{color:var(--text); font-weight:600;}
   .a-plan{padding-top:18px; border-top:1px solid var(--border);}
 
+  /* ---------- Edit mode ---------- */
+  .edit-btn{
+    font-family:var(--font-mono); font-size:12px; padding:6px 12px;
+    background:var(--surface-2); border:1px solid var(--border-bright); color:var(--text-dim);
+    border-radius:3px; cursor:pointer; margin-left:6px;
+  }
+  .edit-btn:hover{color:var(--text); border-color:var(--amber);}
+  .edit-btn.save{background:var(--amber); color:#fff; border-color:var(--amber);}
+  .edit-btn.active{background:var(--safety); color:#fff; border-color:var(--safety);}
+  .save-status{font-family:var(--font-mono); font-size:12px; color:var(--good); margin-left:8px;}
+  .editable.editing{
+    outline:2px dashed var(--amber); outline-offset:6px; border-radius:4px;
+    cursor:text;
+  }
+
   footer{
     margin-top:60px; padding-top:20px; border-top:1px solid var(--border);
     font-family:var(--font-mono); font-size:13px; color:var(--text-faint); text-align:center;
@@ -157,6 +190,11 @@
       기준 시점 &nbsp;<b>2026년 7월</b><br>
       대상 현장 &nbsp;<b>건축 36 · 인프라 15</b><br>
       데이터 갱신 &nbsp;<b>로우데이터 기준 스냅샷</b>
+      <div style="margin-top:12px;">
+        <button id="editToggleBtn" class="edit-btn">✎ 분석 내용 편집</button>
+        <button id="saveBtn" class="edit-btn save" style="display:none;">저장</button>
+        <span id="saveStatus" class="save-status"></span>
+      </div>
     </div>
   </header>
 
@@ -185,7 +223,7 @@
         <h3>계획대비 분석 &mdash; 7개월 경과(58.3%) 기준 정상진도 비교</h3>
         <div class="chart-box"><canvas id="pacechart"></canvas></div>
         <div style="overflow-x:auto; margin-top:18px;"><table id="paceTable"></table></div>
-        <div class="analysis-block" style="margin-top:18px;">
+        <div class="analysis-block editable" id="editable-pace" style="margin-top:18px;">
           <p class="a-lead">경과월 기준 정상진도는 <b>58.3%</b>(7/12개월) &mdash; 전체 누계 이행율 <b>66.3%</b>로 <span class="a-good">계획 대비 앞서 진행 중</span></p>
           <ul class="a-list">
             <li><b>Target/특별점검</b>은 83.1%로 가장 앞서있음 &mdash; 정상진도 대비 +20.6건 초과 달성</li>
@@ -200,7 +238,7 @@
       <div class="panel">
         <h3>점검 현황 상세 (월별)</h3>
         <div style="overflow-x:auto;"><table id="inspTable"></table></div>
-        <div class="analysis-block" style="margin-top:18px;">
+        <div class="analysis-block editable" id="editable-insp" style="margin-top:18px;">
           <p class="a-lead">월별 전체 점검건수는 <b>3월 25건</b>으로 연중 최고치 &mdash; 이후 감소하다 <b>7월 20건</b>으로 재반등</p>
           <ul class="a-list">
             <li><b>Target/특별점검</b>이 7월 14건으로 월간 최고치 기록, 전체 카테고리 중 증가폭이 가장 큼</li>
@@ -216,7 +254,7 @@
       <div class="panel">
         <h3>재점검 현황 (26년, 최초점검 &rarr; 재점검 결과)</h3>
         <div style="overflow-x:auto;"><table id="recheckTable"></table></div>
-        <div class="analysis-block" style="margin-top:18px;">
+        <div class="analysis-block editable" id="editable-recheck" style="margin-top:18px;">
           <p class="a-lead">26년 재점검 <b>7건</b> 발생 &mdash; 최초점검 기록이 확인되는 5건 모두 <span class="a-good">재점검에서 등급 유지 또는 개선</span></p>
           <ul class="a-list">
             <li><b>이문아이파크자이(3-2)</b> 준공점검(건축) &mdash; 최초 72.7점(D) &rarr; 재점검 92점(A)으로 대폭 개선</li>
@@ -260,7 +298,7 @@
     <div class="grid-1" style="margin-top:1px; display:grid; background:var(--border); border:1px solid var(--border);">
       <div class="panel">
         <h3>NCR 실적분석</h3>
-        <div class="analysis-block">
+        <div class="analysis-block editable" id="editable-ncr">
           <p class="a-lead">26년 1~7월 NCR <b>20건</b> &middot; 25년 동기간(1~7월) <b>46건</b> 대비 <span class="a-good">▼ 26건 감소</span></p>
           <ul class="a-list">
             <li><b>골조공사</b>가 8건(40%)으로 가장 많음 &mdash; 서울원(MXD) 3/11(3건: 철근 계단보강·피복 등), 호현센트럴 6/2(3건: 철근피복·동바리수평보강·데크 보전도방지)에 집중 발생</li>
@@ -269,7 +307,7 @@
             <li>기계설비 NCR도 25년 12건 &rarr; 26년 4건으로 큰 폭 감소, 전기설비는 26년 발생 없음(25년 4건)</li>
           </ul>
         </div>
-        <div class="analysis-block a-plan">
+        <div class="analysis-block a-plan editable" id="editable-ncrplan">
           <h4>향후 계획</h4>
           <ul class="a-list">
             <li>금속천장 비구조요소 내진설계 &mdash; 반복 지적 확인됨에 따라 <b>착공 전 사전교육 의무화</b> 검토</li>
@@ -703,6 +741,70 @@ new Chart(document.getElementById('perfStack'), {
   const sumCells = sumMonthly.map(m=>`<td>${m[0]}</td><td>${m[1]}</td>`).join('');
   body += `<tr class="total"><td>건축+인프라</td><td>${sumPlan}</td><td>${sumTarget}</td>${sumCells}<td>${sumCount}</td><td>${sumSites}</td><td>${(sumRate*100).toFixed(1)}%</td></tr>`;
   t.innerHTML = head+body;
+})();
+
+/* ============ 편집 모드 / Firestore 동기화 ============ */
+(function(){
+  const editables = Array.from(document.querySelectorAll('.editable'));
+  const editBtn = document.getElementById('editToggleBtn');
+  const saveBtn = document.getElementById('saveBtn');
+  const statusEl = document.getElementById('saveStatus');
+  let editing = false;
+
+  function waitForFirebase(cb){
+    if (window.__fb) return cb(window.__fb);
+    setTimeout(()=>waitForFirebase(cb), 100);
+  }
+
+  // 저장된 내용 불러오기 (있으면 기본 분석 텍스트를 덮어씀)
+  waitForFirebase(async ({db, docRef, getDoc})=>{
+    try{
+      const snap = await getDoc(docRef);
+      if (snap.exists()){
+        const data = snap.data();
+        editables.forEach(el=>{
+          if (data[el.id]) el.innerHTML = data[el.id];
+        });
+        if (data.__savedBy || data.__savedAt){
+          statusEl.textContent = `마지막 수정: ${data.__savedAt || ''} ${data.__savedBy ? '('+data.__savedBy+')' : ''}`;
+        }
+      }
+    }catch(e){
+      console.error('Firestore 불러오기 실패', e);
+      statusEl.textContent = '불러오기 실패 (콘솔 확인)';
+      statusEl.style.color = 'var(--bad)';
+    }
+  });
+
+  editBtn.addEventListener('click', ()=>{
+    editing = !editing;
+    editables.forEach(el=>{
+      el.contentEditable = editing;
+      el.classList.toggle('editing', editing);
+    });
+    editBtn.textContent = editing ? '편집 중지' : '✎ 분석 내용 편집';
+    editBtn.classList.toggle('active', editing);
+    saveBtn.style.display = editing ? 'inline-block' : 'none';
+  });
+
+  saveBtn.addEventListener('click', ()=>{
+    waitForFirebase(async ({docRef, setDoc})=>{
+      const payload = {};
+      editables.forEach(el=>{ payload[el.id] = el.innerHTML; });
+      const editorName = prompt('저장하시는 분 이름(선택, 취소해도 저장됩니다):', '') || '';
+      payload.__savedAt = new Date().toLocaleString('ko-KR');
+      if (editorName) payload.__savedBy = editorName;
+      try{
+        await setDoc(docRef, payload, {merge:true});
+        statusEl.style.color = 'var(--good)';
+        statusEl.textContent = '저장됨 · ' + payload.__savedAt;
+      }catch(e){
+        console.error('Firestore 저장 실패', e);
+        statusEl.style.color = 'var(--bad)';
+        statusEl.textContent = '저장 실패 (콘솔 확인)';
+      }
+    });
+  });
 })();
 </script>
 </body>
