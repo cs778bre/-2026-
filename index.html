@@ -249,11 +249,11 @@
     <div class="grid-2" style="margin-top:1px;">
       <div class="panel">
         <h3>협력사별 NCR 발행 (26년)</h3>
-        <div class="chart-box"><canvas id="ncrPartner"></canvas></div>
+        <div class="chart-box" style="height:400px;"><canvas id="ncrPartner"></canvas></div>
       </div>
       <div class="panel">
         <h3>협력사별 상세</h3>
-        <div style="overflow-x:auto;"><table id="ncrPartnerTable"></table></div>
+        <div style="overflow-x:auto;"><table id="ncrPartnerTable" style="font-size:13px;"></table></div>
       </div>
     </div>
 
@@ -571,7 +571,10 @@ new Chart(document.getElementById('ncrPartner'), {
       legend:{display:false},
       tooltip:{callbacks:{afterLabel:(c)=>'공종: '+ncrPartner[c.dataIndex].cats.join(', ')}}
     },
-    scales:{ x:{grid:{color:GRID}, beginAtZero:true, ticks:{stepSize:1}}, y:{grid:{display:false}} }
+    scales:{
+      x:{grid:{color:GRID}, beginAtZero:true, ticks:{stepSize:1}},
+      y:{grid:{display:false}, ticks:{font:{size:11}, autoSkip:false}}
+    }
   }
 });
 
