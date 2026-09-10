@@ -257,12 +257,13 @@
         <h3>재점검 현황 (26년, 최초점검 &rarr; 재점검 결과)</h3>
         <div style="overflow-x:auto;"><table id="recheckTable"></table></div>
         <div class="analysis-block editable" id="editable-recheck" style="margin-top:18px;">
-          <p class="a-lead">■ 26년 재점검 <b>7건</b> 발생 &rarr; 최초점검 기록이 확인되는 5건 모두 <span class="a-good">재점검에서 등급 유지 또는 개선</span></p>
+          <p class="a-lead">■ 26년 재점검 <b>7건</b> 발생 &rarr; 최초점검 기록이 확인되는 <span class="a-good">6건 모두 등급 유지 또는 개선</span></p>
           <ul class="a-list">
             <li><b>이문아이파크자이(3-2)</b> 준공점검(건축) - 최초 72.7점(D) &rarr; 재점검 92점(A)으로 대폭 개선</li>
             <li><b>호현센트럴</b> 골조1 - 최초 86.7점(B) &rarr; 재점검 98.5점(S)</li>
+            <li><b>춘천레이크시티</b> 도장 - 최초 70점(D, 2025-11-06) &rarr; 재점검 100점(S)으로 대폭 개선</li>
             <li><b>창원센트럴</b> 도장 - 최초·재점검 모두 92.9점(A) 동일 &rarr; 점수 재확인 목적의 재점검으로 추정</li>
-            <li>춘천레이크시티·서산센트럴 도장 2건은 <span class="a-warn">최초점검 기록이 로우데이터에 없어</span> 확인 필요</li>
+            <li>서산센트럴 도장 1건은 <span class="a-warn">최초점검 기록이 로우데이터에 없어</span> 확인 필요</li>
           </ul>
         </div>
       </div>
@@ -523,7 +524,7 @@ new Chart(document.getElementById('pacechart'), {
 const rechecks = [
   {site:'강릉오션시티',   item:'Target 타일',      firstDate:'2026-01-13', firstScore:80,   firstGrade:'D', reDate:'2026-02-24', reScore:99,   reGrade:'S'},
   {site:'이문아이파크자이(3-2)', item:'준공점검(건축)', firstDate:'2026-04-08', firstScore:72.7, firstGrade:'D', reDate:'2026-04-30', reScore:92,   reGrade:'A'},
-  {site:'춘천레이크시티',  item:'Target 도장',      firstDate:null,          firstScore:null, firstGrade:null, reDate:'2026-05-20', reScore:100,  reGrade:'S'},
+  {site:'춘천레이크시티',  item:'Target 도장',      firstDate:'2025-11-06', firstScore:70,   firstGrade:'D', reDate:'2026-05-20', reScore:100,  reGrade:'S'},
   {site:'강변역센트럴',    item:'Target 금속천장',  firstDate:'2026-04-06', firstScore:80,   firstGrade:'D', reDate:'2026-05-21', reScore:93.3, reGrade:'A'},
   {site:'창원센트럴',      item:'Target 도장',      firstDate:'2026-02-11', firstScore:92.9, firstGrade:'A', reDate:'2026-07-01', reScore:92.9, reGrade:'A'},
   {site:'호현센트럴',      item:'Target 골조1',     firstDate:'2026-06-02', firstScore:86.7, firstGrade:'B', reDate:'2026-07-08', reScore:98.5, reGrade:'S'},
