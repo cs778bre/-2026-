@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026 품질팀 이행실적 대시보드</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+  import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBozAVw0h6T4vEzJR7hpZ-FqvykqPl4Vu4",
+    authDomain: "quality-dashboard-2026-ca0c8.firebaseapp.com",
+    projectId: "quality-dashboard-2026-ca0c8",
+    storageBucket: "quality-dashboard-2026-ca0c8.firebasestorage.app",
+    messagingSenderId: "269007785490",
+    appId: "1:269007785490:web:d39701b3bd1036a95992cb"
+  };
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const docRef = doc(db, "dashboard", "content");
+
+  window.__fb = { db, docRef, getDoc, setDoc };
+</script>
+<style>
+  :root{
+    --bg: #eef1f6;
+    --bg-grid: #e3e9f1;
+    --surface: #ffffff;
+    --surface-2: #f6f8fb;
+    --border: #d7dee8;
+    --border-bright: #aab8ce;
+    --text: #1b2536;
+    --text-dim: #56637a;
+    --text-faint: #8a97ac;
+    --amber: #c07f14;
+    --amber-dim: #e8c78a;
+    --safety: #d15a30;
+    --good: #2f9070;
+    --bad: #c94257;
+    --arch: #2f7ab8;
+    --infra: #7c5cc4;
+    --font-display: 'IBM Plex Sans KR', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:
+      linear-gradient(var(--bg-grid) 1px, transparent 1px) 0 0/100% 42px,
+      linear-gradient(90deg, var(--bg-grid) 1px, transparent 1px) 0 0/42px 100%,
+      var(--bg);
+    color:var(--text);
+    font-family:var(--font-display);
+    font-size:16px;
+    -webkit-font-smoothing:antialiased;
+    padding: 32px 24px 80px;
+  }
+  .wrap{max-width:1240px; margin:0 auto;}
+
+  /* ---------- Header ---------- */
+  header{
+    display:flex; justify-content:space-between; align-items:flex-end;
+    border-bottom:1px solid var(--border-bright);
+    padding-bottom:22px; margin-bottom:28px; flex-wrap:wrap; gap:16px;
+  }
+  .eyebrow{
+    font-family:var(--font-mono); font-size:13px; letter-spacing:.18em;
+    color:var(--amber); text-transform:uppercase; margin-bottom:8px;
+  }
+  h1{font-size:36px; font-weight:700; letter-spacing:-0.01em;}
+  h1 span{color:var(--text-dim); font-weight:400;}
+  .stamp{
+    font-family:var(--font-mono); font-size:14px; color:var(--text-faint);
+    text-align:right; line-height:1.7;
+  }
+  .stamp b{color:var(--text-dim); font-weight:500;}
+
+  /* ---------- KPI strip ---------- */
+  .kpi-row{display:grid; grid-template-columns:repeat(5,1fr); gap:1px; background:var(--border); border:1px solid var(--border); margin-bottom:40px;}
+  .kpi{background:var(--surface); padding:20px 18px; position:relative;}
+  .kpi::before{content:attr(data-idx); position:absolute; top:14px; right:16px; font-family:var(--font-mono); font-size:11px; color:var(--text-faint);}
+  .kpi .label{font-size:14px; color:var(--text-dim); margin-bottom:10px;}
+  .kpi .value{font-family:var(--font-mono); font-size:36px; font-weight:600; color:var(--text); line-height:1;}
+  .kpi .value small{font-size:16px; color:var(--text-dim); font-weight:400;}
+  .kpi .delta{margin-top:8px; font-family:var(--font-mono); font-size:14px;}
+  .delta.up{color:var(--good);} .delta.down{color:var(--bad);} .delta.flat{color:var(--text-faint);}
+
+  /* ---------- Section ---------- */
+  section{margin-bottom:52px;}
+  .sec-head{display:flex; align-items:baseline; gap:14px; margin-bottom:18px; border-left:3px solid var(--amber); padding-left:14px;}
+  .sec-head h2{font-size:22px; font-weight:600;}
+  .sec-head .sub{font-family:var(--font-mono); font-size:13px; color:var(--text-faint);}
+
+  .grid-2{display:grid; grid-template-columns: 1.35fr 1fr; gap:1px; background:var(--border); border:1px solid var(--border);}
+  .grid-3{display:grid; grid-template-columns: repeat(3,1fr); gap:1px; background:var(--border); border:1px solid var(--border); margin-top:1px;}
+  .panel{background:var(--surface); padding:22px;}
+  .panel h3{font-size:15px; font-weight:600; color:var(--text-dim); text-transform:uppercase; letter-spacing:.05em; margin-bottom:16px;}
+  .chart-box{position:relative; height:260px;}
+  .chart-box.small{height:200px;}
+
+  /* ---------- Table ---------- */
+  table{width:100%; border-collapse:collapse; font-size:15px;}
+  th{
+    text-align:right; font-weight:500; color:var(--text-faint);
+    font-family:var(--font-mono); font-size:13px; padding:9px 8px;
+    border-bottom:1px solid var(--border-bright); white-space:nowrap;
+  }
+  th:first-child, td:first-child{text-align:left; color:var(--text);}
+  td{
+    text-align:right; padding:9px 8px; font-family:var(--font-mono);
+    border-bottom:1px solid var(--border); color:var(--text-dim);
+  }
+  tr:last-child td{border-bottom:none;}
+  tr.total td{color:var(--amber); font-weight:600; border-top:1px solid var(--border-bright);}
+  td.hot{color:var(--safety); font-weight:600;}
+
+  /* ---------- Gauge ---------- */
+  .gauge-row{display:flex; gap:28px; align-items:center; justify-content:center; padding:6px 0 4px;}
+  .gauge{position:relative; width:150px; height:150px;}
+  .gauge svg{transform:rotate(-90deg);}
+  .gauge .pct{
+    position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  }
+  .gauge .pct b{font-family:var(--font-mono); font-size:30px;}
+  .gauge .pct span{font-size:13px; color:var(--text-dim); margin-top:2px;}
+  .gauge-legend{font-size:14px; color:var(--text-dim); text-align:center; margin-top:10px;}
+
+  .pill-row{display:flex; gap:8px; flex-wrap:wrap; margin-top:14px;}
+  .pill{font-family:var(--font-mono); font-size:13px; padding:5px 10px; border:1px solid var(--border-bright); color:var(--text-dim); border-radius:2px;}
+  .pill b{color:var(--text);}
+
+  /* ---------- Analysis narrative ---------- */
+  .analysis-block{margin-bottom:18px;}
+  .analysis-block:last-child{margin-bottom:0;}
+  .analysis-block h4{font-size:14px; color:var(--amber); text-transform:uppercase; letter-spacing:.05em; margin-bottom:10px;}
+  .a-lead{font-size:16px; margin-bottom:14px; color:var(--text);}
+  .a-lead b{font-family:var(--font-mono); color:var(--text);}
+  .a-good{color:var(--good); font-family:var(--font-mono); font-weight:600;}
+  .a-warn{color:var(--safety); font-weight:600;}
+  .a-list{list-style:none; display:flex; flex-direction:column; gap:10px;}
+  .a-list li{
+    font-size:15px; line-height:1.6; color:var(--text-dim);
+    padding-left:16px; position:relative;
+  }
+  .a-list li::before{content:'—'; position:absolute; left:0; color:var(--text-faint);}
+  .a-list li b{color:var(--text); font-weight:600;}
+  .a-plan{padding-top:18px; border-top:1px solid var(--border);}
+
+  /* ---------- Edit mode ---------- */
+  .edit-btn{
+    font-family:var(--font-mono); font-size:12px; padding:6px 12px;
+    background:var(--surface-2); border:1px solid var(--border-bright); color:var(--text-dim);
+    border-radius:3px; cursor:pointer; margin-left:6px;
+  }
+  .edit-btn:hover{color:var(--text); border-color:var(--amber);}
+  .edit-btn.save{background:var(--amber); color:#fff; border-color:var(--amber);}
+  .edit-btn.active{background:var(--safety); color:#fff; border-color:var(--safety);}
+  .save-status{font-family:var(--font-mono); font-size:12px; color:var(--good); margin-left:8px;}
+  .editable.editing{
+    outline:2px dashed var(--amber); outline-offset:6px; border-radius:4px;
+    cursor:text;
+  }
+
+  footer{
+    margin-top:60px; padding-top:20px; border-top:1px solid var(--border);
+    font-family:var(--font-mono); font-size:13px; color:var(--text-faint); text-align:center;
+  }
+
+  @media(max-width:860px){
+    .kpi-row{grid-template-columns:repeat(2,1fr);}
+    .grid-2{grid-template-columns:1fr;}
+    .grid-3{grid-template-columns:1fr;}
+    header{flex-direction:column; align-items:flex-start;}
+    .stamp{text-align:left;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div>
+      <div class="eyebrow">Quality Management · FY2026</div>
+      <h1>품질팀 이행실적 <span>대시보드</span></h1>
+    </div>
+    <div class="stamp">
+      기준 시점 &nbsp;<b>2026년 8월</b><br>
+      대상 현장 &nbsp;<b>건축 36 · 인프라 15</b><br>
+      데이터 갱신 &nbsp;<b>로우데이터 기준 스냅샷</b>
+      <div style="margin-top:12px;">
+        <button id="editToggleBtn" class="edit-btn">✎ 분석 내용 편집</button>
+        <button id="saveBtn" class="edit-btn save" style="display:none;">저장</button>
+        <span id="saveStatus" class="save-status"></span>
+      </div>
+    </div>
+  </header>
+
+  <div class="kpi-row" id="kpiRow"></div>
+
+  <!-- SECTION 1: 점검 및 NCR -->
+  <section>
+    <div class="sec-head">
+      <h2>점검 및 NCR 발행 현황</h2>
+      <span class="sub">INSPECTION &amp; NCR / 1&ndash;8월 누계</span>
+    </div>
+
+    <div class="grid-2">
+      <div class="panel">
+        <h3>카테고리별 월별 점검 건수</h3>
+        <div class="chart-box"><canvas id="inspTrend"></canvas></div>
+      </div>
+      <div class="panel">
+        <h3>카테고리별 누계 이행율</h3>
+        <div class="chart-box"><canvas id="inspRate"></canvas></div>
+      </div>
+    </div>
+
+    <div class="grid-1" style="margin-top:1px; display:grid; background:var(--border); border:1px solid var(--border);">
+      <div class="panel">
+        <h3>계획대비 분석 &mdash; 8개월 경과(66.7%) 기준 정상진도 비교</h3>
+        <div class="chart-box"><canvas id="pacechart"></canvas></div>
+        <div style="overflow-x:auto; margin-top:18px;"><table id="paceTable"></table></div>
+        <div class="analysis-block editable" id="editable-pace" style="margin-top:18px;">
+          <p class="a-lead">■ 경과월 기준 정상진도는 <b>66.7%</b>(8/12개월) &rarr; 전체 누계 이행율 <b>74.7%</b>로 <span class="a-good">계획 대비 앞서 진행 중</span></p>
+          <ul class="a-list">
+            <li><b>Target/특별점검</b>은 91.6%로 가장 앞서있음 &rarr; 정상진도 대비 +20.7건 초과 달성</li>
+            <li><b>ISO</b>(57.8%)와 <b>준공(건축,인프라)</b>(47.1%)가 정상진도(66.7%)에 못 미쳐 <span class="a-warn">하반기 관리 필요</span></li>
+            <li>레미콘사 사전검수는 연간계획 3건 중 3건을 이미 완료(100%)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-1" style="margin-top:1px; display:grid; background:var(--border); border:1px solid var(--border);">
+      <div class="panel">
+        <h3>점검 현황 상세 (월별)</h3>
+        <div style="overflow-x:auto;"><table id="inspTable"></table></div>
+        <div class="analysis-block editable" id="editable-insp" style="margin-top:18px;">
+          <p class="a-lead">■ 월별 전체 점검건수는 <b>3월 25건</b>으로 연중 최고치 &rarr; 이후 등락을 반복하며 <b>8월 15건</b>으로 감소</p>
+          <ul class="a-list">
+            <li><b>Target/특별점검</b>이 7월 14건으로 월간 최고치 기록, 전체 카테고리 중 증가폭이 가장 큼</li>
+            <li><b>M/H·초기</b>와 <b>레미콘사 사전검수</b>는 7월 실적 0건 &rarr; 전월누계만큼 계획을 이미 초과 달성했거나 해당월 대상 현장이 없었던 것으로 추정</li>
+            <li>1&sim;2월은 5건, 10건으로 상대적으로 저조 &rarr; 연초 착공 현장이 적어 점검 대상이 적었던 시기로 보임</li>
+            <li>4&sim;6월은 22&rarr;20&rarr;16건으로 점진적 감소세를 보이다 7월 반등</li>
+            <li>8월엔 <b>현대해상 일산사옥</b>(골조1 97.8점 S, ISO 96.3점 S)과 <b>파주메디컬클러스터</b>(ISO·적기점검, 인프라)가 신규 현장으로 등장</li>
+            <li><b>광주센테니얼</b>은 8월 평가 3건(ISO·시스템기·시스템전) 전부 S등급 &mdash; 이번 달 최우수 현장</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-1" style="margin-top:1px; display:grid; background:var(--border); border:1px solid var(--border);">
+      <div class="panel">
+        <h3>재점검 현황 (26년, 최초점검 &rarr; 재점검 결과)</h3>
+        <div style="overflow-x:auto;"><table id="recheckTable"></table></div>
+        <div class="analysis-block editable" id="editable-recheck" style="margin-top:18px;">
+          <p class="a-lead">■ 26년 재점검 <b>7건</b> 발생 &rarr; 최초점검 기록이 확인되는 5건 모두 <span class="a-good">재점검에서 등급 유지 또는 개선</span></p>
+          <ul class="a-list">
+            <li><b>이문아이파크자이(3-2)</b> 준공점검(건축) - 최초 72.7점(D) &rarr; 재점검 92점(A)으로 대폭 개선</li>
+            <li><b>호현센트럴</b> 골조1 - 최초 86.7점(B) &rarr; 재점검 98.5점(S)</li>
+            <li><b>창원센트럴</b> 도장 - 최초·재점검 모두 92.9점(A) 동일 &rarr; 점수 재확인 목적의 재점검으로 추정</li>
+            <li>춘천레이크시티·서산센트럴 도장 2건은 <span class="a-warn">최초점검 기록이 로우데이터에 없어</span> 확인 필요</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-top:1px;">
+      <div class="panel">
+        <h3>공종별 NCR 발행 &mdash; 25년(~7월) vs 26년</h3>
+        <div class="chart-box"><canvas id="ncrCompare"></canvas></div>
+      </div>
+      <div class="panel">
+        <h3>26년 공종별 NCR 월별 발행 현황</h3>
+        <div class="chart-box"><canvas id="ncrMonthly"></canvas></div>
+      </div>
+    </div>
+
+    <div class="grid-1" style="margin-top:1px; display:grid; background:var(--border); border:1px solid var(--border);">
+      <div class="panel">
+        <h3>NCR 발행 상세 (26년, 공종 &times; 월별)</h3>
+        <div style="overflow-x:auto;"><table id="ncrTable"></table></div>
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-top:1px;">
+      <div class="panel">
+        <h3>협력사별 NCR 발행 (26년)</h3>
+        <div class="chart-box" style="height:400px;"><canvas id="ncrPartner"></canvas></div>
+      </div>
+      <div class="panel">
+        <h3>협력사별 상세</h3>
+        <div style="overflow-x:auto;"><table id="ncrPartnerTable" style="font-size:13px;"></table></div>
+      </div>
+    </div>
+
+    <div class="grid-1" style="margin-top:1px; display:grid; background:var(--border); border:1px solid var(--border);">
+      <div class="panel">
+        <h3>NCR 실적분석</h3>
+        <div class="analysis-block editable" id="editable-ncr">
+          <p class="a-lead">■ 26년 1~8월 NCR <b>22건</b> &middot; 25년 동기간(1~8월) <b>46건</b> 대비 <span class="a-good">▼ 24건 감소</span></p>
+          <ul class="a-list">
+            <li><b>골조공사</b>가 10건(45%)으로 가장 많음 &rarr; 서울원(MXD) 3/11(3건: 표준갈고리교차 미실시·보교차구간 스트럽 누락·슈앙카자리 배근 불량), 호현센트럴 6/2(3건: 철근피복·동바리수평보강·보전도방지), 울산반구동 8/28(2건)에 집중</li>
+            <li><b>조적공사 "피난동선 블록상단 철물 고정불량"</b>이 가경6단지(3/26)·대연THE IL(3/31, 2건) 총 <span class="a-warn">3건 반복 발생</span> &rarr; 대피 안전과 직결되는 사안이라 시공기준 재확인 필요</li>
+            <li><b>금속천장 비구조요소 내진설계 미이행</b>이 강변역센트럴(4/6, 천장 클립바 고정철물 미사용·피스고정 누락)과 서산센트럴(7/10) 두 현장에서 반복 지적 &rarr; 개별 현장 이슈가 아닌 공통 시공관리 이슈로 추정</li>
+            <li><b>배관 그루브조인트 홈가공불량</b>이 서울원(MXD) 6/4(기계소방 배관)과 군산레이크시티 7/15(강관 65A·100A) 두 현장에서 각각 발생 &rarr; 이음부 시공 전 검수 절차 필요</li>
+            <li>서산센트럴 5/13 시스템(기) &rarr; 우수맨홀 배관 연결 시 기계·토목 간 협의 미흡(상향구배 불가) &mdash; 공종 간 사전협의 부족 사례</li>
+            <li>기계설비 NCR은 25년 12건 &rarr; 26년 4건, 전기설비는 26년 발생 없음(25년 4건)으로 큰 폭 감소</li>
+            <li>8월 신규 지적: <b>울산반구동</b> 골조1 &rarr; (주)우설건설, <b>①선잡이철근결속 불량 ②보 거푸집 전도방지조치 브라켓 미적용</b> 2건 &mdash; 8월 유일한 NCR 사례, 특히 ②는 <span class="a-warn">전도(붕괴) 위험 관련 안전 이슈</span>로 우선 확인 필요</li>
+          </ul>
+        </div>
+        <div class="analysis-block a-plan editable" id="editable-ncrplan">
+          <h4>향후 계획</h4>
+          <ul class="a-list">
+            <li><b>조적 피난동선 철물 고정기준</b> 재점검 및 표준상세도 배포 &mdash; 3개 현장 반복 발생 사안</li>
+            <li>금속천장 비구조요소 내진설계 &rarr; 반복 지적 확인됨에 따라 <b>착공 전 사전교육 의무화</b> 검토</li>
+            <li>배관 그루브조인트 가공 품질기준 강화 &mdash; 협력사 시공 전 자체검수 절차 추가 검토</li>
+            <li>골조 공정(철근 피복·결속·동바리 수평보강) 표준시공지침 재배포 및 관리자 현장점검 강화</li>
+            <li><b>울산반구동</b> 보 거푸집 전도방지조치 브라켓 미적용 건 &mdash; 유사 안전이슈 재발 방지를 위해 전 현장 거푸집 전도방지 브라켓 설치 여부 <span class="a-warn">긴급 전수점검</span> 검토</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 2: 품질성과지표 -->
+  <section>
+    <div class="sec-head">
+      <h2>품질성과지표 현황</h2>
+      <span class="sub">PERFORMANCE INDEX / 평가 점검 건수·현장 기준</span>
+    </div>
+
+    <div class="grid-3">
+      <div class="panel">
+        <h3>연간 이행율</h3>
+        <div class="gauge-row" id="gaugeRow"></div>
+      </div>
+      <div class="panel" style="grid-column: span 2;">
+        <h3>월별 평가 현장수 &mdash; 건축 / 인프라</h3>
+        <div class="chart-box small"><canvas id="perfTrend"></canvas></div>
+      </div>
+    </div>
+
+    <div class="panel" style="border:1px solid var(--border); margin-top:1px;">
+      <h3>월별 평가 건수 누적</h3>
+      <div class="chart-box"><canvas id="perfStack"></canvas></div>
+    </div>
+
+    <div class="panel" style="border:1px solid var(--border); border-top:none; margin-top:-1px;">
+      <h3>실적 상세 (월별, 건수/현장)</h3>
+      <div style="overflow-x:auto;"><table id="perfTable"></table></div>
+    </div>
+  </section>
+
+  <footer>QUALITY TEAM &middot; SITE PERFORMANCE SNAPSHOT &middot; 26년도 6월 이행실적 관리표 기반</footer>
+</div>
+
+<script>
+/* ============ DATA (엑셀 로우데이터 기준 2026-08-06 스냅샷) ============ */
+const MONTHS = ['1월','2월','3월','4월','5월','6월','7월','8월'];
+
+const inspection = [
+  {cat:'M/H·초기',      prev:12, monthly:[2,2,1,3,1,3,0,1]},
+  {cat:'Target/특별점검', prev:55, monthly:[3,6,15,13,12,6,14,7]},
+  {cat:'적기(인프라)',    prev:4,  monthly:[0,0,1,1,1,1,1,2]},
+  {cat:'준공(건축,인프라)',prev:6,  monthly:[0,0,0,2,1,3,2,0]},
+  {cat:'ISO',           prev:18, monthly:[0,1,7,3,4,3,3,5]},
+  {cat:'레미콘사 사전검수', prev:3,  monthly:[0,1,1,0,1,0,0,0]},
+];
+// 이행율 계산용 연간계획(품질성과지표 카테고리별 배분값 없음 -> 소계/전체계획 비례로 표시하지 않고, 누계/계획 참고치 유지)
+const inspPlan = {'M/H·초기':20,'Target/특별점검':83,'적기(인프라)':10,'준공(건축,인프라)':17,'ISO':45,'레미콘사 사전검수':3};
+const PACE = 8/12; // 마지막입력월 8 / 12개월
+inspection.forEach(r=>{
+  r.total = r.monthly.reduce((a,b)=>a+b,0);
+  r.plan = inspPlan[r.cat] || 0;
+  r.rate = r.plan ? r.total/r.plan : 0;
+  r.expected = r.plan * PACE;
+  r.gap = r.total - r.expected;
+});
+
+const ncrByGongjong = [
+  {g:'골조공사', y25:20, y26:10, monthly:[0,0,5,0,0,3,0,2]},
+  {g:'기계설비', y25:12, y26:4, monthly:[0,0,0,0,2,1,1,0]},
+  {g:'전기설비', y25:4,  y26:0, monthly:[0,0,0,0,0,0,0,0]},
+  {g:'조적공사', y25:2,  y26:3, monthly:[0,0,3,0,0,0,0,0]},
+  {g:'미장공사', y25:0,  y26:0, monthly:[0,0,0,0,0,0,0,0]},
+  {g:'방수공사', y25:0,  y26:0, monthly:[0,0,0,0,0,0,0,0]},
+  {g:'타일공사', y25:3,  y26:1, monthly:[1,0,0,0,0,0,0,0]},
+  {g:'도장공사', y25:5,  y26:1, monthly:[0,1,0,0,0,0,0,0]},
+  {g:'금속천장', y25:0,  y26:2, monthly:[0,0,0,1,0,0,1,0]},
+  {g:'내장공사', y25:0,  y26:0, monthly:[0,0,0,0,0,0,0,0]},
+  {g:'부대토목', y25:0,  y26:1, monthly:[0,0,0,0,1,0,0,0]},
+  {g:'기타',    y25:0,  y26:0, monthly:[0,0,0,0,0,0,0,0]},
+];
+
+const performance = [
+  {label:'건축',  plan:133, targetSites:36, monthly:[[1,1],[6,5],[19,10],[16,8],[16,8],[12,9],[18,10],[10,6]], totalCount:98, totalSites:24, rate:98/133},
+  {label:'인프라', plan:25,  targetSites:15, monthly:[[0,0],[0,0],[3,2],[2,1],[2,1],[1,1],[2,1],[4,2]], totalCount:14, totalSites:7,  rate:14/25},
+];
+
+/* ============ Chart.js 공통 설정 ============ */
+Chart.defaults.font.family = "'IBM Plex Mono', monospace";
+Chart.defaults.font.size = 13;
+Chart.defaults.color = '#56637a';
+const GRID = 'rgba(170,184,206,0.5)';
+const COLORS = ['#2f7ab8','#2f9070','#b9860f','#c94257','#7c5cc4','#56637a','#1f9bb3','#c2557e'];
+
+/* ============ KPI STRIP ============ */
+const totalInsp = inspection.reduce((s,r)=>s+r.total,0);
+const totalNcr26 = ncrByGongjong.reduce((s,r)=>s+r.y26,0);
+const totalNcr25 = ncrByGongjong.reduce((s,r)=>s+r.y25,0);
+const ncrDelta = totalNcr26-totalNcr25;
+const archPerf = performance[0], infraPerf = performance[1];
+
+const kpis = [
+  {label:'1~8월 점검 누계', value:totalInsp, unit:'건'},
+  {label:'건축 이행율', value:(archPerf.rate*100).toFixed(1), unit:'%'},
+  {label:'인프라 이행율', value:(infraPerf.rate*100).toFixed(1), unit:'%'},
+  {label:'NCR 발행 (26년)', value:totalNcr26, unit:'건', delta:ncrDelta},
+  {label:'평가 현장 (누계)', value: archPerf.totalSites+infraPerf.totalSites, unit:'개소'},
+];
+const kpiRow = document.getElementById('kpiRow');
+kpis.forEach((k,i)=>{
+  const el = document.createElement('div');
+  el.className='kpi'; el.dataset.idx = String(i+1).padStart(2,'0');
+  let deltaHtml = '';
+  if(k.delta!==undefined){
+    const cls = k.delta<0?'down':(k.delta>0?'up':'flat');
+    const arrow = k.delta<0?'▼':(k.delta>0?'▲':'—');
+    deltaHtml = `<div class="delta ${cls}">${arrow} 전년대비 ${Math.abs(k.delta)}건</div>`;
+  }
+  el.innerHTML = `<div class="label">${k.label}</div><div class="value">${k.value}<small> ${k.unit}</small></div>${deltaHtml}`;
+  kpiRow.appendChild(el);
+});
+
+/* ============ 1. 카테고리별 월별 점검 건수 (누적 바) ============ */
+new Chart(document.getElementById('inspTrend'), {
+  type:'bar',
+  data:{
+    labels:MONTHS,
+    datasets: inspection.map((row,i)=>({
+      label:row.cat, data:row.monthly, backgroundColor:COLORS[i%COLORS.length], stack:'s',
+      borderRadius:2, maxBarThickness:28,
+    }))
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{position:'bottom', labels:{boxWidth:10, padding:12, font:{size:12}}}},
+    scales:{
+      x:{stacked:true, grid:{display:false}},
+      y:{stacked:true, grid:{color:GRID}, beginAtZero:true}
+    }
+  }
+});
+
+/* ============ 2. 카테고리별 이행율 (가로 바) ============ */
+new Chart(document.getElementById('inspRate'), {
+  type:'bar',
+  data:{
+    labels: inspection.map(r=>r.cat),
+    datasets:[{
+      data: inspection.map(r=>+(r.rate*100).toFixed(1)),
+      backgroundColor: inspection.map((r,i)=>COLORS[i%COLORS.length]),
+      borderRadius:2, maxBarThickness:18,
+    }]
+  },
+  options:{
+    indexAxis:'y', responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{display:false}, tooltip:{callbacks:{label:(c)=>c.parsed.x+'%'}}},
+    scales:{
+      x:{grid:{color:GRID}, max:100, ticks:{callback:v=>v+'%'}},
+      y:{grid:{display:false}}
+    }
+  }
+});
+
+/* ============ 계획대비 분석 (누계 vs 계획 vs 정상진도) ============ */
+new Chart(document.getElementById('pacechart'), {
+  type:'bar',
+  data:{
+    labels: inspection.map(r=>r.cat),
+    datasets:[
+      {label:'연간계획', data: inspection.map(r=>r.plan), backgroundColor:'#c3cddd', borderRadius:2, maxBarThickness:22},
+      {label:'누계 실적', data: inspection.map(r=>r.total), backgroundColor: inspection.map(r=> r.gap>=0 ? '#2f9070' : '#c94257'), borderRadius:2, maxBarThickness:22},
+    ]
+  },
+  options:{
+    indexAxis:'y', responsive:true, maintainAspectRatio:false,
+    plugins:{
+      legend:{position:'bottom', labels:{boxWidth:10,padding:12,font:{size:12}}},
+      tooltip:{callbacks:{
+        afterBody:(items)=>{
+          const r = inspection[items[0].dataIndex];
+          return `정상진도(66.7%): ${r.expected.toFixed(1)}건`;
+        }
+      }}
+    },
+    scales:{ x:{grid:{color:GRID}, beginAtZero:true}, y:{grid:{display:false}} }
+  }
+});
+
+(function(){
+  const t = document.getElementById('paceTable');
+  let head = '<tr><th>카테고리</th><th>연간계획</th><th>누계실적</th><th>이행율</th><th>정상진도(66.7%)</th><th>과부족</th></tr>';
+  let body = '';
+  inspection.forEach(r=>{
+    const gapCls = r.gap>=0 ? '' : 'hot';
+    const gapSign = r.gap>=0 ? '+' : '';
+    body += `<tr><td>${r.cat}</td><td>${r.plan}</td><td>${r.total}</td><td>${(r.rate*100).toFixed(1)}%</td><td>${r.expected.toFixed(1)}</td><td class="${gapCls}">${gapSign}${r.gap.toFixed(1)}</td></tr>`;
+  });
+  const sumPlan = inspection.reduce((s,r)=>s+r.plan,0);
+  const sumTotal = inspection.reduce((s,r)=>s+r.total,0);
+  const sumExpected = sumPlan*PACE;
+  const sumGap = sumTotal-sumExpected;
+  body += `<tr class="total"><td>합계</td><td>${sumPlan}</td><td>${sumTotal}</td><td>${(sumTotal/sumPlan*100).toFixed(1)}%</td><td>${sumExpected.toFixed(1)}</td><td>${sumGap>=0?'+':''}${sumGap.toFixed(1)}</td></tr>`;
+  t.innerHTML = head+body;
+})();
+
+/* ============ 재점검 현황 ============ */
+const rechecks = [
+  {site:'강릉오션시티',   item:'Target 타일',      firstDate:'2026-01-13', firstScore:80,   firstGrade:'D', reDate:'2026-02-24', reScore:99,   reGrade:'S'},
+  {site:'이문아이파크자이(3-2)', item:'준공점검(건축)', firstDate:'2026-04-08', firstScore:72.7, firstGrade:'D', reDate:'2026-04-30', reScore:92,   reGrade:'A'},
+  {site:'춘천레이크시티',  item:'Target 도장',      firstDate:null,          firstScore:null, firstGrade:null, reDate:'2026-05-20', reScore:100,  reGrade:'S'},
+  {site:'강변역센트럴',    item:'Target 금속천장',  firstDate:'2026-04-06', firstScore:80,   firstGrade:'D', reDate:'2026-05-21', reScore:93.3, reGrade:'A'},
+  {site:'창원센트럴',      item:'Target 도장',      firstDate:'2026-02-11', firstScore:92.9, firstGrade:'A', reDate:'2026-07-01', reScore:92.9, reGrade:'A'},
+  {site:'호현센트럴',      item:'Target 골조1',     firstDate:'2026-06-02', firstScore:86.7, firstGrade:'B', reDate:'2026-07-08', reScore:98.5, reGrade:'S'},
+  {site:'서산센트럴',      item:'Target 도장',      firstDate:null,          firstScore:null, firstGrade:null, reDate:'2026-07-10', reScore:90,   reGrade:'A'},
+];
+(function(){
+  const t = document.getElementById('recheckTable');
+  let head = '<tr><th>현장명</th><th>점검항목</th><th>최초점검일</th><th>최초점수</th><th>등급</th><th>재점검일</th><th>재점검점수</th><th>등급</th><th>변화</th></tr>';
+  let body = '';
+  rechecks.forEach(r=>{
+    const hasFirst = r.firstScore!==null;
+    const delta = hasFirst ? (r.reScore-r.firstScore) : null;
+    const deltaHtml = hasFirst
+      ? `<span class="${delta>0?'a-good':delta<0?'a-warn':''}">${delta>0?'+':''}${delta.toFixed(1)}</span>`
+      : '<span style="color:var(--text-faint)">기록없음</span>';
+    body += `<tr>
+      <td>${r.site}</td><td>${r.item}</td>
+      <td>${r.firstDate||'-'}</td><td>${hasFirst?r.firstScore:'-'}</td><td>${r.firstGrade||'-'}</td>
+      <td>${r.reDate}</td><td><b>${r.reScore}</b></td><td>${r.reGrade}</td>
+      <td>${deltaHtml}</td>
+    </tr>`;
+  });
+  t.innerHTML = head+body;
+})();
+
+/* ============ 3. NCR 25년 vs 26년 ============ */
+const ncrDisplay = ncrByGongjong.filter(r=>r.g!=='전체');
+new Chart(document.getElementById('ncrCompare'), {
+  type:'bar',
+  data:{
+    labels: ncrDisplay.map(r=>r.g),
+    datasets:[
+      {label:"25년", data:ncrDisplay.map(r=>r.y25), backgroundColor:'#9aa8bd', borderRadius:2, maxBarThickness:16},
+      {label:"26년", data:ncrDisplay.map(r=>r.y26), backgroundColor:'#d15a30', borderRadius:2, maxBarThickness:16},
+    ]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{position:'bottom', labels:{boxWidth:10,padding:12,font:{size:12}}}},
+    scales:{ x:{grid:{display:false}, ticks:{font:{size:11}}}, y:{grid:{color:GRID}, beginAtZero:true} }
+  }
+});
+
+/* ============ NCR 월별x공종 (26년) ============ */
+new Chart(document.getElementById('ncrMonthly'), {
+  type:'bar',
+  data:{
+    labels: MONTHS,
+    datasets: ncrByGongjong.filter(r=>r.y26>0 && r.g!=='전체').map((r,i)=>({
+      label:r.g, data:r.monthly, backgroundColor:COLORS[i%COLORS.length], stack:'s',
+      borderRadius:2, maxBarThickness:26,
+    }))
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{position:'bottom', labels:{boxWidth:10,padding:12,font:{size:12}}}},
+    scales:{ x:{stacked:true, grid:{display:false}}, y:{stacked:true, grid:{color:GRID}, beginAtZero:true, ticks:{stepSize:1}} }
+  }
+});
+
+/* ============ 협력사별 NCR 발행 ============ */
+const ncrPartner = [
+  {partner:'레오개발(주)',     count:6, cats:['골조'],        sites:['서울원(MXD)','호현센트럴']},
+  {partner:'(주)휘강건설',     count:2, cats:['골조'],        sites:['서울원(MXD)']},
+  {partner:'해성산업개발(주)', count:2, cats:['기계'],        sites:['서산센트럴']},
+  {partner:'성실건업(주)',     count:1, cats:['타일'],        sites:['강릉오션시티']},
+  {partner:'엘림피엔씨(주)',   count:1, cats:['도장'],        sites:['창원센트럴']},
+  {partner:'(주)원산건설',     count:1, cats:['조적'],        sites:['가경6단지']},
+  {partner:'진명건설(주)',     count:1, cats:['조적'],        sites:['대연THE IL']},
+  {partner:'성원개발(주)',     count:1, cats:['조적'],        sites:['대연THE IL']},
+  {partner:'(주)스페이스체인지', count:1, cats:['금속천장'],  sites:['강변역센트럴']},
+  {partner:'엠케이지',         count:1, cats:['기계'],        sites:['서울원(MXD)']},
+  {partner:'우림아이앤씨(주)', count:1, cats:['금속천장'],    sites:['서산센트럴']},
+  {partner:'진흥설비(주)',     count:1, cats:['기계'],        sites:['군산레이크시티']},
+  {partner:'아인건설(주)',     count:1, cats:['부대토목'],    sites:['서산센트럴']},
+  {partner:'(주)우설건설',     count:2, cats:['골조'],        sites:['울산반구동']},
+];
+
+new Chart(document.getElementById('ncrPartner'), {
+  type:'bar',
+  data:{
+    labels: ncrPartner.map(r=>r.partner),
+    datasets:[{
+      data: ncrPartner.map(r=>r.count),
+      backgroundColor: ncrPartner.map(r=> r.count>=5 ? '#c94257' : r.count>=2 ? '#b9860f' : '#9aa8bd'),
+      borderRadius:2, maxBarThickness:16,
+    }]
+  },
+  options:{
+    indexAxis:'y', responsive:true, maintainAspectRatio:false,
+    plugins:{
+      legend:{display:false},
+      tooltip:{callbacks:{afterLabel:(c)=>'공종: '+ncrPartner[c.dataIndex].cats.join(', ')}}
+    },
+    scales:{
+      x:{grid:{color:GRID}, beginAtZero:true, ticks:{stepSize:1}},
+      y:{grid:{display:false}, ticks:{font:{size:11}, autoSkip:false}}
+    }
+  }
+});
+
+(function(){
+  const t = document.getElementById('ncrPartnerTable');
+  let head = '<tr><th>협력사</th><th>NCR건수</th><th>공종</th><th>관련 현장</th></tr>';
+  let body = '';
+  ncrPartner.forEach(r=>{
+    body += `<tr><td>${r.partner}</td><td class="${r.count>=5?'hot':''}"><b>${r.count}</b></td><td style="text-align:left; color:var(--text-dim);">${r.cats.join(', ')}</td><td style="text-align:left; color:var(--text-dim);">${r.sites.join(', ')}</td></tr>`;
+  });
+  const tot = ncrPartner.reduce((s,r)=>s+r.count,0);
+  body += `<tr class="total"><td>합계</td><td>${tot}</td><td></td><td></td></tr>`;
+  t.innerHTML = head+body;
+})();
+
+/* ============ NCR 상세 테이블 (공종x월별) ============ */
+(function(){
+  const t = document.getElementById('ncrTable');
+  let head = '<tr><th>공종</th>' + MONTHS.map(m=>`<th>${m}</th>`).join('') + '<th>26년 누계</th><th>25년 누계</th></tr>';
+  let body = '';
+  ncrDisplay.forEach(r=>{
+    const cells = r.monthly.map(v=>`<td>${v||''}</td>`).join('');
+    body += `<tr><td>${r.g}</td>${cells}<td><b>${r.y26}</b></td><td>${r.y25}</td></tr>`;
+  });
+  const totMonthly = MONTHS.map((_,i)=>ncrDisplay.reduce((s,r)=>s+r.monthly[i],0));
+  const tot26 = ncrDisplay.reduce((s,r)=>s+r.y26,0);
+  const tot25 = ncrDisplay.reduce((s,r)=>s+r.y25,0);
+  body += `<tr class="total"><td>합계</td>${totMonthly.map(v=>`<td>${v}</td>`).join('')}<td>${tot26}</td><td>${tot25}</td></tr>`;
+  t.innerHTML = head+body;
+})();
+
+/* ============ 점검 상세 테이블 ============ */
+(function(){
+  const t = document.getElementById('inspTable');
+  let head = '<tr><th>카테고리</th><th>전월<br>누계</th>' + MONTHS.map(m=>`<th>${m}</th>`).join('') + '<th>누계</th><th>이행율</th></tr>';
+  let body = '';
+  inspection.forEach(r=>{
+    const cells = r.monthly.map(v=>`<td>${v}</td>`).join('');
+    body += `<tr><td>${r.cat}</td><td>${r.prev}</td>${cells}<td><b>${r.total}</b></td><td class="${r.rate<0.5?'hot':''}">${(r.rate*100).toFixed(1)}%</td></tr>`;
+  });
+  const totPrev = inspection.reduce((s,r)=>s+r.prev,0);
+  const totMonthly = MONTHS.map((_,i)=>inspection.reduce((s,r)=>s+r.monthly[i],0));
+  const totSum = inspection.reduce((s,r)=>s+r.total,0);
+  body += `<tr class="total"><td>합계</td><td>${totPrev}</td>${totMonthly.map(v=>`<td>${v}</td>`).join('')}<td>${totSum}</td><td>-</td></tr>`;
+  t.innerHTML = head+body;
+})();
+
+/* ============ 이행율 게이지 (건축/인프라) ============ */
+(function(){
+  const row = document.getElementById('gaugeRow');
+  performance.forEach((p,i)=>{
+    const pct = Math.round(p.rate*100);
+    const r=60, c=2*Math.PI*r, off = c - (pct/100)*c;
+    const color = i===0 ? '#2f7ab8' : '#7c5cc4';
+    const div = document.createElement('div');
+    div.innerHTML = `
+      <div class="gauge">
+        <svg width="150" height="150">
+          <circle cx="75" cy="75" r="${r}" stroke="#dde3ec" stroke-width="10" fill="none"/>
+          <circle cx="75" cy="75" r="${r}" stroke="${color}" stroke-width="10" fill="none"
+            stroke-dasharray="${c}" stroke-dashoffset="${off}" stroke-linecap="round"/>
+        </svg>
+        <div class="pct"><b>${pct}%</b><span>${p.label}</span></div>
+      </div>
+      <div class="gauge-legend">${p.totalCount} / ${p.plan}건</div>`;
+    div.style.textAlign='center';
+    row.appendChild(div);
+  });
+})();
+
+/* ============ 월별 평가 현장수 (건축/인프라 라인) ============ */
+new Chart(document.getElementById('perfTrend'), {
+  type:'line',
+  data:{
+    labels:MONTHS,
+    datasets:[
+      {label:'건축', data:performance[0].monthly.map(m=>m[1]), borderColor:'#2f7ab8', backgroundColor:'rgba(47,122,184,0.12)', fill:true, tension:0.3, pointRadius:3},
+      {label:'인프라', data:performance[1].monthly.map(m=>m[1]), borderColor:'#7c5cc4', backgroundColor:'rgba(124,92,196,0.12)', fill:true, tension:0.3, pointRadius:3},
+    ]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{position:'bottom', labels:{boxWidth:10,padding:12,font:{size:12}}}},
+    scales:{ x:{grid:{display:false}}, y:{grid:{color:GRID}, beginAtZero:true} }
+  }
+});
+
+/* ============ 월별 평가 건수 누적 ============ */
+new Chart(document.getElementById('perfStack'), {
+  type:'bar',
+  data:{
+    labels:MONTHS,
+    datasets:[
+      {label:'건축', data:performance[0].monthly.map(m=>m[0]), backgroundColor:'#2f7ab8', stack:'s', borderRadius:2, maxBarThickness:26},
+      {label:'인프라', data:performance[1].monthly.map(m=>m[0]), backgroundColor:'#7c5cc4', stack:'s', borderRadius:2, maxBarThickness:26},
+    ]
+  },
+  options:{
+    responsive:true, maintainAspectRatio:false,
+    plugins:{legend:{position:'bottom', labels:{boxWidth:10,padding:12,font:{size:12}}}},
+    scales:{ x:{stacked:true, grid:{display:false}}, y:{stacked:true, grid:{color:GRID}, beginAtZero:true} }
+  }
+});
+
+/* ============ 실적 상세 테이블 ============ */
+(function(){
+  const t = document.getElementById('perfTable');
+  const monthHead = MONTHS.map(m=>`<th colspan="2">${m}</th>`).join('');
+  const subHead = MONTHS.map(()=>'<th>건수</th><th>현장</th>').join('');
+  let head = `<tr><th rowspan="2">구분</th><th rowspan="2">계획</th><th rowspan="2">대상<br>현장</th>${monthHead}<th rowspan="2">누계<br>건수</th><th rowspan="2">누계<br>현장</th><th rowspan="2">이행율</th></tr><tr>${subHead}</tr>`;
+  let body = '';
+  performance.forEach(p=>{
+    const cells = p.monthly.map(m=>`<td>${m[0]}</td><td>${m[1]}</td>`).join('');
+    body += `<tr><td>${p.label}</td><td>${p.plan}</td><td>${p.targetSites}</td>${cells}<td><b>${p.totalCount}</b></td><td>${p.totalSites}</td><td class="${p.rate<0.5?'hot':''}">${(p.rate*100).toFixed(1)}%</td></tr>`;
+  });
+  const sumPlan = performance.reduce((s,p)=>s+p.plan,0);
+  const sumTarget = performance.reduce((s,p)=>s+p.targetSites,0);
+  const sumMonthly = MONTHS.map((_,i)=>{
+    const cnt = performance.reduce((s,p)=>s+p.monthly[i][0],0);
+    const site = performance.reduce((s,p)=>s+p.monthly[i][1],0);
+    return [cnt,site];
+  });
+  const sumCount = performance.reduce((s,p)=>s+p.totalCount,0);
+  const sumSites = performance.reduce((s,p)=>s+p.totalSites,0);
+  const sumRate = sumCount/sumPlan;
+  const sumCells = sumMonthly.map(m=>`<td>${m[0]}</td><td>${m[1]}</td>`).join('');
+  body += `<tr class="total"><td>건축+인프라</td><td>${sumPlan}</td><td>${sumTarget}</td>${sumCells}<td>${sumCount}</td><td>${sumSites}</td><td>${(sumRate*100).toFixed(1)}%</td></tr>`;
+  t.innerHTML = head+body;
+})();
+
+/* ============ 편집 모드 / Firestore 동기화 ============ */
+(function(){
+  const editables = Array.from(document.querySelectorAll('.editable'));
+  const editBtn = document.getElementById('editToggleBtn');
+  const saveBtn = document.getElementById('saveBtn');
+  const statusEl = document.getElementById('saveStatus');
+  let editing = false;
+
+  function waitForFirebase(cb){
+    if (window.__fb) return cb(window.__fb);
+    setTimeout(()=>waitForFirebase(cb), 100);
+  }
+
+  // 저장된 내용 불러오기 (있으면 기본 분석 텍스트를 덮어씀)
+  waitForFirebase(async ({db, docRef, getDoc})=>{
+    try{
+      const snap = await getDoc(docRef);
+      if (snap.exists()){
+        const data = snap.data();
+        editables.forEach(el=>{
+          if (data[el.id]) el.innerHTML = data[el.id];
+        });
+        if (data.__savedBy || data.__savedAt){
+          statusEl.textContent = `마지막 수정: ${data.__savedAt || ''} ${data.__savedBy ? '('+data.__savedBy+')' : ''}`;
+        }
+      }
+    }catch(e){
+      console.error('Firestore 불러오기 실패', e);
+      statusEl.textContent = '불러오기 실패 (콘솔 확인)';
+      statusEl.style.color = 'var(--bad)';
+    }
+  });
+
+  editBtn.addEventListener('click', ()=>{
+    editing = !editing;
+    editables.forEach(el=>{
+      el.contentEditable = editing;
+      el.classList.toggle('editing', editing);
+    });
+    editBtn.textContent = editing ? '편집 중지' : '✎ 분석 내용 편집';
+    editBtn.classList.toggle('active', editing);
+    saveBtn.style.display = editing ? 'inline-block' : 'none';
+  });
+
+  saveBtn.addEventListener('click', ()=>{
+    waitForFirebase(async ({docRef, setDoc})=>{
+      const payload = {};
+      editables.forEach(el=>{ payload[el.id] = el.innerHTML; });
+      const editorName = prompt('저장하시는 분 이름(선택, 취소해도 저장됩니다):', '') || '';
+      payload.__savedAt = new Date().toLocaleString('ko-KR');
+      if (editorName) payload.__savedBy = editorName;
+      try{
+        await setDoc(docRef, payload, {merge:true});
+        statusEl.style.color = 'var(--good)';
+        statusEl.textContent = '저장됨 · ' + payload.__savedAt;
+      }catch(e){
+        console.error('Firestore 저장 실패', e);
+        statusEl.style.color = 'var(--bad)';
+        statusEl.textContent = '저장 실패 (콘솔 확인)';
+      }
+    });
+  });
+})();
+</script>
+</body>
+</html>
