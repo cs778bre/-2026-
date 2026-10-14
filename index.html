@@ -149,6 +149,13 @@
   .a-list li b{color:var(--text); font-weight:600;}
   .a-plan{padding-top:18px; border-top:1px solid var(--border);}
 
+  /* ---------- 대외기관 수검 ---------- */
+  .kpi-row.compact{margin-bottom:0;}
+  td.tl, th.tl{text-align:left;}
+  td.tc{text-align:center;}
+  tr.row-warn td{background:#fbe5d6;}
+  td.cert-warn{background:#ffc000 !important; color:#1b2536; font-weight:600;}
+
   /* ---------- Edit mode ---------- */
   .edit-btn{
     font-family:var(--font-mono); font-size:12px; padding:6px 12px;
@@ -187,7 +194,7 @@
       <h1>품질팀 이행실적 <span>대시보드</span></h1>
     </div>
     <div class="stamp">
-      기준 시점 &nbsp;<b>2026년 8월</b><br>
+      기준 시점 &nbsp;<b>2026년 9월</b><br>
       대상 현장 &nbsp;<b>건축 36 · 인프라 15</b><br>
       데이터 갱신 &nbsp;<b>로우데이터 기준 스냅샷</b>
       <div style="margin-top:12px;">
@@ -204,7 +211,7 @@
   <section>
     <div class="sec-head">
       <h2>점검 및 NCR 발행 현황</h2>
-      <span class="sub">INSPECTION &amp; NCR / 1&ndash;8월 누계</span>
+      <span class="sub">INSPECTION &amp; NCR / 1&ndash;9월 누계</span>
     </div>
 
     <div class="grid-2">
@@ -220,14 +227,15 @@
 
     <div class="grid-1" style="margin-top:1px; display:grid; background:var(--border); border:1px solid var(--border);">
       <div class="panel">
-        <h3>계획대비 분석 &mdash; 8개월 경과(66.7%) 기준 정상진도 비교</h3>
+        <h3>계획대비 분석 &mdash; 9개월 경과(75.0%) 기준 정상진도 비교</h3>
         <div class="chart-box"><canvas id="pacechart"></canvas></div>
         <div style="overflow-x:auto; margin-top:18px;"><table id="paceTable"></table></div>
         <div class="analysis-block editable" id="editable-pace" style="margin-top:18px;">
-          <p class="a-lead">■ 경과월 기준 정상진도는 <b>66.7%</b>(8/12개월) &rarr; 전체 누계 이행율 <b>74.7%</b>로 <span class="a-good">계획 대비 앞서 진행 중</span></p>
+          <p class="a-lead">■ 경과월 기준 정상진도는 <b>75.0%</b>(9/12개월) &rarr; 전체 누계 이행율 <b>84.3%</b>로 <span class="a-good">계획 대비 앞서 진행 중</span></p>
           <ul class="a-list">
-            <li><b>Target/특별점검</b>은 91.6%로 가장 앞서있음 &rarr; 정상진도 대비 +20.7건 초과 달성</li>
-            <li><b>ISO</b>(57.8%)와 <b>준공(건축,인프라)</b>(47.1%)가 정상진도(66.7%)에 못 미쳐 <span class="a-warn">하반기 관리 필요</span></li>
+            <li><b>Target/특별점검</b>은 98.8%로 가장 앞서있음 &rarr; 정상진도 대비 +19.8건 초과 달성(연간계획 83건 중 82건 완료)</li>
+            <li><b>M/H·초기</b>(85.0%)와 <b>적기(인프라)</b>(90.0%)도 정상진도를 넘어 순항 중</li>
+            <li><b>ISO</b>(68.9%)와 <b>준공(건축,인프라)</b>(47.1%)가 정상진도(75.0%)에 못 미쳐 <span class="a-warn">4분기 집중 관리 필요</span></li>
             <li>레미콘사 사전검수는 연간계획 3건 중 3건을 이미 완료(100%)</li>
           </ul>
         </div>
@@ -239,14 +247,16 @@
         <h3>점검 현황 상세 (월별)</h3>
         <div style="overflow-x:auto;"><table id="inspTable"></table></div>
         <div class="analysis-block editable" id="editable-insp" style="margin-top:18px;">
-          <p class="a-lead">■ 월별 전체 점검건수는 <b>3월 25건</b>으로 연중 최고치 &rarr; 이후 등락을 반복하며 <b>8월 15건</b>으로 감소</p>
+          <p class="a-lead">■ 월별 전체 점검건수는 <b>3월 25건</b>으로 연중 최고치 &rarr; 이후 등락을 반복하며 <b>9월 17건</b>(8월 15건 대비 2건 증가)</p>
           <ul class="a-list">
-            <li><b>Target/특별점검</b>이 7월 14건으로 월간 최고치 기록, 전체 카테고리 중 증가폭이 가장 큼</li>
-            <li><b>M/H·초기</b>와 <b>레미콘사 사전검수</b>는 7월 실적 0건 &rarr; 전월누계만큼 계획을 이미 초과 달성했거나 해당월 대상 현장이 없었던 것으로 추정</li>
+            <li><b>Target/특별점검</b>이 7월 14건으로 월간 최고치 기록, 9월에도 6건으로 이어져 누계 82건</li>
             <li>1&sim;2월은 5건, 10건으로 상대적으로 저조 &rarr; 연초 착공 현장이 적어 점검 대상이 적었던 시기로 보임</li>
             <li>4&sim;6월은 22&rarr;20&rarr;16건으로 점진적 감소세를 보이다 7월 반등</li>
-            <li>8월엔 <b>현대해상 일산사옥</b>(골조1 97.8점 S, ISO 96.3점 S)과 <b>파주메디컬클러스터</b>(ISO·적기점검, 인프라)가 신규 현장으로 등장</li>
-            <li><b>광주센테니얼</b>은 8월 평가 3건(ISO·시스템기·시스템전) 전부 S등급 &mdash; 이번 달 최우수 현장</li>
+            <li>8월엔 <b>현대해상 일산사옥</b>(골조1·ISO 모두 S등급)과 <b>파주메디컬클러스터</b>(인프라)가 신규 현장으로 등장, <b>광주센테니얼</b>은 평가 3건 전부 S등급</li>
+            <li>9월 <b>M/H·초기</b>가 4건으로 급증 &rarr; 천안부성3지구·가경IPARK7단지(M/H), 안양역센트럴수자인·시티오씨엘8단지(초기) 등 신규 착수 현장 중심</li>
+            <li>9월 <b>인프라</b>는 김해사이언스파크·용현학익 1블럭이 26년 첫 평가(적기점검·ISO 각 2건)를 받았고 4건 모두 A등급 이상</li>
+            <li><b>천안아이파크시티</b> 타일(99점)·석공사(96.4점), <b>서산센트럴</b> 금속천장 재점검(100점)이 S등급으로 9월 우수 사례</li>
+            <li><b>군산레이크시티</b> 금속천장 84.44점으로 9월 유일한 C등급(NCR 1건 동반) &rarr; <span class="a-warn">재점검 대상</span></li>
           </ul>
         </div>
       </div>
@@ -257,13 +267,15 @@
         <h3>재점검 현황 (26년, 최초점검 &rarr; 재점검 결과)</h3>
         <div style="overflow-x:auto;"><table id="recheckTable"></table></div>
         <div class="analysis-block editable" id="editable-recheck" style="margin-top:18px;">
-          <p class="a-lead">■ 26년 재점검 <b>7건</b> 발생 &rarr; 최초점검 기록이 확인되는 <span class="a-good">6건 모두 등급 유지 또는 개선</span></p>
+          <p class="a-lead">■ 26년 재점검 <b>8건</b> 발생 &rarr; 최초점검 기록이 확인되는 <span class="a-good">7건 모두 등급 유지 또는 개선</span></p>
           <ul class="a-list">
             <li><b>이문아이파크자이(3-2)</b> 준공점검(건축) - 최초 72.7점(D) &rarr; 재점검 92점(A)으로 대폭 개선</li>
             <li><b>호현센트럴</b> 골조1 - 최초 86.7점(B) &rarr; 재점검 98.5점(S)</li>
             <li><b>춘천레이크시티</b> 도장 - 최초 70점(D, 2025-11-06) &rarr; 재점검 100점(S)으로 대폭 개선</li>
+            <li><b>서산센트럴</b> 금속천장 - 최초 84.44점(C, 7/10) &rarr; 재점검 100점(S, 9/4)으로 대폭 개선</li>
             <li><b>창원센트럴</b> 도장 - 최초·재점검 모두 92.9점(A) 동일 &rarr; 점수 재확인 목적의 재점검으로 추정</li>
             <li>서산센트럴 도장 1건은 <span class="a-warn">최초점검 기록이 로우데이터에 없어</span> 확인 필요</li>
+            <li><b>군산레이크시티</b> 금속천장(9/17, 84.44점 C)은 <span class="a-warn">아직 재점검 이력이 없어</span> 재점검 필요</li>
           </ul>
         </div>
       </div>
@@ -271,7 +283,7 @@
 
     <div class="grid-2" style="margin-top:1px;">
       <div class="panel">
-        <h3>공종별 NCR 발행 &mdash; 25년(~7월) vs 26년</h3>
+        <h3>공종별 NCR 발행 &mdash; 25년(~9월) vs 26년</h3>
         <div class="chart-box"><canvas id="ncrCompare"></canvas></div>
       </div>
       <div class="panel">
@@ -302,25 +314,99 @@
       <div class="panel">
         <h3>NCR 실적분석</h3>
         <div class="analysis-block editable" id="editable-ncr">
-          <p class="a-lead">■ 26년 1~8월 NCR <b>22건</b> &middot; 25년 동기간(1~8월) <b>46건</b> 대비 <span class="a-good">▼ 24건 감소</span></p>
+          <p class="a-lead">■ 26년 1~9월 NCR <b>23건</b> &middot; 25년 동기간(1~9월) <b>48건</b> 대비 <span class="a-good">▼ 25건 감소</span></p>
           <ul class="a-list">
-            <li><b>골조공사</b>가 10건(45%)으로 가장 많음 &rarr; 서울원(MXD) 3/11(3건: 표준갈고리교차 미실시·보교차구간 스트럽 누락·슈앙카자리 배근 불량), 호현센트럴 6/2(3건: 철근피복·동바리수평보강·보전도방지), 울산반구동 8/28(2건)에 집중</li>
+            <li><b>골조공사</b>가 10건(43%)으로 가장 많음 &rarr; 서울원(MXD) 3/11(3건: 표준갈고리교차 미실시·보교차구간 스트럽 누락·슈앙카자리 배근 불량), 호현센트럴 6/2(3건: 철근피복·동바리수평보강·보전도방지), 울산반구동 8/28(2건)에 집중</li>
             <li><b>조적공사 "피난동선 블록상단 철물 고정불량"</b>이 가경6단지(3/26)·대연THE IL(3/31, 2건) 총 <span class="a-warn">3건 반복 발생</span> &rarr; 대피 안전과 직결되는 사안이라 시공기준 재확인 필요</li>
-            <li><b>금속천장 비구조요소 내진설계 미이행</b>이 강변역센트럴(4/6, 천장 클립바 고정철물 미사용·피스고정 누락)과 서산센트럴(7/10) 두 현장에서 반복 지적 &rarr; 개별 현장 이슈가 아닌 공통 시공관리 이슈로 추정</li>
+            <li><b>금속천장 비구조요소 내진설계 미이행</b>이 강변역센트럴(4/6, 천장 클립바 고정철물 미사용·피스고정 누락)·서산센트럴(7/10)·군산레이크시티(9/17, 벽체고정철물 규격이 구조검토와 상이) <span class="a-warn">3개 현장에서 반복</span> &rarr; 개별 현장 이슈가 아닌 공통 시공관리 이슈이며, 강변역센트럴·군산레이크시티는 <b>동일 협력사((주)스페이스체인지)</b>가 반복 지적</li>
             <li><b>배관 그루브조인트 홈가공불량</b>이 서울원(MXD) 6/4(기계소방 배관)과 군산레이크시티 7/15(강관 65A·100A) 두 현장에서 각각 발생 &rarr; 이음부 시공 전 검수 절차 필요</li>
-            <li>서산센트럴 5/13 시스템(기) &rarr; 우수맨홀 배관 연결 시 기계·토목 간 협의 미흡(상향구배 불가) &mdash; 공종 간 사전협의 부족 사례</li>
+            <li>서산센트럴 5/13 시스템(기) &rarr; 우수맨홀 배관 연결 시 기계·토목 간 협의 미흡(상향구배 불가) - 공종 간 사전협의 부족 사례</li>
             <li>기계설비 NCR은 25년 12건 &rarr; 26년 4건, 전기설비는 26년 발생 없음(25년 4건)으로 큰 폭 감소</li>
-            <li>8월 신규 지적: <b>울산반구동</b> 골조1 &rarr; (주)우설건설, <b>①선잡이철근결속 불량 ②보 거푸집 전도방지조치 브라켓 미적용</b> 2건 &mdash; 8월 유일한 NCR 사례, 특히 ②는 <span class="a-warn">전도(붕괴) 위험 관련 안전 이슈</span>로 우선 확인 필요</li>
+            <li>8월 신규 지적: <b>울산반구동</b> 골조1 &rarr; (주)우설건설, <b>①선잡이철근결속 불량 ②보 거푸집 전도방지조치 브라켓 미적용</b> 2건 - 특히 ②는 <span class="a-warn">전도(붕괴) 위험 관련 안전 이슈</span>로 우선 확인 필요</li>
+            <li>9월 신규 지적: <b>군산레이크시티</b> 금속천장 &rarr; (주)스페이스체인지, "내진설계 실시공 미적용(벽체고정철물 규격이 구조검토와 상이)" 1건 - 9월 유일한 NCR이자 금속천장 3번째 사례, 점검점수도 84.44점(C)</li>
           </ul>
         </div>
         <div class="analysis-block a-plan editable" id="editable-ncrplan">
           <h4>향후 계획</h4>
           <ul class="a-list">
-            <li><b>조적 피난동선 철물 고정기준</b> 재점검 및 표준상세도 배포 &mdash; 3개 현장 반복 발생 사안</li>
-            <li>금속천장 비구조요소 내진설계 &rarr; 반복 지적 확인됨에 따라 <b>착공 전 사전교육 의무화</b> 검토</li>
-            <li>배관 그루브조인트 가공 품질기준 강화 &mdash; 협력사 시공 전 자체검수 절차 추가 검토</li>
+            <li><b>금속천장 비구조요소 내진설계</b> &rarr; 3개 현장 반복·동일 협력사((주)스페이스체인지) 2회 지적으로 <b>착공 전 사전교육 의무화</b>와 협력사 대상 시정교육 필요</li>
+            <li><b>군산레이크시티</b> 금속천장(84.44점, C) &rarr; 벽체고정철물 규격을 구조검토서 기준으로 시정한 뒤 <span class="a-warn">재점검 실시</span></li>
+            <li><b>조적 피난동선 철물 고정기준</b> 재점검 및 표준상세도 배포 &rarr; 3개 현장 반복 발생 사안</li>
+            <li>배관 그루브조인트 가공 품질기준 강화 &rarr; 협력사 시공 전 자체검수 절차 추가 검토</li>
             <li>골조 공정(철근 피복·결속·동바리 수평보강) 표준시공지침 재배포 및 관리자 현장점검 강화</li>
-            <li><b>울산반구동</b> 보 거푸집 전도방지조치 브라켓 미적용 건 &mdash; 유사 안전이슈 재발 방지를 위해 전 현장 거푸집 전도방지 브라켓 설치 여부 <span class="a-warn">긴급 전수점검</span> 검토</li>
+            <li><b>울산반구동</b> 보 거푸집 전도방지조치 브라켓 미적용 건 &rarr; 유사 안전이슈 재발 방지를 위해 전 현장 거푸집 전도방지 브라켓 설치 여부 <span class="a-warn">긴급 전수점검</span> 검토</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION: 대외기관 수검 -->
+  <section>
+    <div class="sec-head">
+      <h2>대외기관 수검 현황</h2>
+      <span class="sub">EXTERNAL INSPECTION / 1&ndash;9월 누계</span>
+    </div>
+
+    <div class="kpi-row compact" id="extKpi"></div>
+
+    <div class="grid-2" style="margin-top:1px;">
+      <div class="panel">
+        <h3>월별 수검 횟수 &mdash; 25년 vs 26년</h3>
+        <div class="chart-box"><canvas id="extMonthly"></canvas></div>
+      </div>
+      <div class="panel">
+        <h3>점검기관별 수검 (26년)</h3>
+        <div class="chart-box"><canvas id="extOrg"></canvas></div>
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-top:1px;">
+      <div class="panel">
+        <h3>점검 유형별 수검 (26년)</h3>
+        <div class="chart-box"><canvas id="extType"></canvas></div>
+      </div>
+      <div class="panel">
+        <h3>지적 종류별 (26년)</h3>
+        <div class="chart-box"><canvas id="extFinding"></canvas></div>
+      </div>
+    </div>
+
+    <div class="grid-1" style="margin-top:1px; display:grid; background:var(--border); border:1px solid var(--border);">
+      <div class="panel">
+        <h3>현장별 수검·지적 현황 (26년)</h3>
+        <div style="overflow-x:auto;"><table id="extSiteTable"></table></div>
+      </div>
+    </div>
+
+    <div class="grid-1" style="margin-top:1px; display:grid; background:var(--border); border:1px solid var(--border);">
+      <div class="panel">
+        <h3>26년 수검 내역 (지적사항 · 확인서 발급 여부)</h3>
+        <div style="overflow-x:auto;"><table id="extTable"></table></div>
+        <div style="margin-top:10px; font-size:13px; color:var(--text-faint);">&#9632; 주황색 행 = 지적사항이 있으나 현지시정 등으로 확인서를 발급하지 않은 경우</div>
+      </div>
+    </div>
+
+    <div class="grid-1" style="margin-top:1px; display:grid; background:var(--border); border:1px solid var(--border);">
+      <div class="panel">
+        <h3>대외기관 수검 실적분석</h3>
+        <div class="analysis-block editable" id="editable-ext">
+          <p class="a-lead">■ 26년 1~9월 수검 <b>14회</b>(건축 11&middot;인프라 3) &middot; 25년 동기간(1~9월) <b>28회</b> 대비 14회 적게 받았고 지적사항은 <b>10건</b>, 과태료&middot;벌점은 <span class="a-good">없음</span></p>
+          <ul class="a-list">
+            <li>지적 10건 중 <b>5건</b>이 <b>천안아이파크시티 2단지</b> 3/16 해빙기점검에서 발생(철근 청소&middot;결속&middot;피복두께, 동바리, 난간) &rarr; 확인서 5건 발급 후 4/20 조치완료</li>
+            <li><b>서울원상업업무시설(CB)</b>는 수검 6회로 가장 잦음 &rarr; 지적 5건 모두 확인서 없이 현지시정(노출철근 보양&middot;흙막이벽체 균열&middot;합벽 철근간격/띠철근 절곡 불량&middot;CSI 등록지연&middot;균열관리 미흡)</li>
+            <li><b>거푸집&middot;철근</b>이 지적 5건(50%)으로 가장 많음 &rarr; 자체 NCR의 골조공사 지적(철근 피복&middot;결속 등)과 같은 주제라 골조 공정 관리 강화 필요</li>
+            <li>지적분류는 품질관리 8건&middot;안전관리 1건&middot;안전계획 1건으로 <b>품질 관련이 80%</b></li>
+            <li>점검기관은 지자체 8회&middot;국토부 계열 6회, 점검 유형은 <b>굴토공사장점검&middot;우기대비 특별점검이 각 4회</b>로 가장 많음</li>
+            <li>8~9월 수검 3회(용현학익&middot;서울원 2회)는 지적사항 기재 없음</li>
+          </ul>
+        </div>
+        <div class="analysis-block a-plan editable" id="editable-extplan">
+          <h4>향후 계획</h4>
+          <ul class="a-list">
+            <li><b>서울원상업업무시설(CB)</b> 반복 지적(철근&middot;가시설&middot;균열관리) &rarr; 수검 전 사전점검 실시 및 자체 점검 주기 단축</li>
+            <li>거푸집&middot;철근 항목 점검표 보강 &rarr; 골조 NCR 지적과 연계해 협력사 교육 실시</li>
+            <li>확인서 미발급 5건 &rarr; 현지시정 조치 결과를 별도로 확인&middot;관리</li>
           </ul>
         </div>
       </div>
@@ -361,19 +447,19 @@
 
 <script>
 /* ============ DATA (엑셀 로우데이터 기준 2026-08-06 스냅샷) ============ */
-const MONTHS = ['1월','2월','3월','4월','5월','6월','7월','8월'];
+const MONTHS = ['1월','2월','3월','4월','5월','6월','7월','8월','9월'];
 
 const inspection = [
-  {cat:'M/H·초기',      prev:12, monthly:[2,2,1,3,1,3,0,1]},
-  {cat:'Target/특별점검', prev:55, monthly:[3,6,15,13,12,6,14,7]},
-  {cat:'적기(인프라)',    prev:4,  monthly:[0,0,1,1,1,1,1,2]},
-  {cat:'준공(건축,인프라)',prev:6,  monthly:[0,0,0,2,1,3,2,0]},
-  {cat:'ISO',           prev:18, monthly:[0,1,7,3,4,3,3,5]},
-  {cat:'레미콘사 사전검수', prev:3,  monthly:[0,1,1,0,1,0,0,0]},
+  {cat:'M/H·초기',      prev:13, monthly:[2,2,1,3,1,3,0,1,4]},
+  {cat:'Target/특별점검', prev:76, monthly:[3,6,15,13,12,6,14,7,6]},
+  {cat:'적기(인프라)',    prev:7,  monthly:[0,0,1,1,1,1,1,2,2]},
+  {cat:'준공(건축,인프라)',prev:8,  monthly:[0,0,0,2,1,3,2,0,0]},
+  {cat:'ISO',           prev:26, monthly:[0,1,7,3,4,3,3,5,5]},
+  {cat:'레미콘사 사전검수', prev:3,  monthly:[0,1,1,0,1,0,0,0,0]},
 ];
 // 이행율 계산용 연간계획(품질성과지표 카테고리별 배분값 없음 -> 소계/전체계획 비례로 표시하지 않고, 누계/계획 참고치 유지)
 const inspPlan = {'M/H·초기':20,'Target/특별점검':83,'적기(인프라)':10,'준공(건축,인프라)':17,'ISO':45,'레미콘사 사전검수':3};
-const PACE = 8/12; // 마지막입력월 8 / 12개월
+const PACE = 9/12; // 마지막입력월 9 / 12개월
 inspection.forEach(r=>{
   r.total = r.monthly.reduce((a,b)=>a+b,0);
   r.plan = inspPlan[r.cat] || 0;
@@ -383,23 +469,23 @@ inspection.forEach(r=>{
 });
 
 const ncrByGongjong = [
-  {g:'골조공사', y25:20, y26:10, monthly:[0,0,5,0,0,3,0,2]},
-  {g:'기계설비', y25:12, y26:4, monthly:[0,0,0,0,2,1,1,0]},
-  {g:'전기설비', y25:4,  y26:0, monthly:[0,0,0,0,0,0,0,0]},
-  {g:'조적공사', y25:2,  y26:3, monthly:[0,0,3,0,0,0,0,0]},
-  {g:'미장공사', y25:0,  y26:0, monthly:[0,0,0,0,0,0,0,0]},
-  {g:'방수공사', y25:0,  y26:0, monthly:[0,0,0,0,0,0,0,0]},
-  {g:'타일공사', y25:3,  y26:1, monthly:[1,0,0,0,0,0,0,0]},
-  {g:'도장공사', y25:5,  y26:1, monthly:[0,1,0,0,0,0,0,0]},
-  {g:'금속천장', y25:0,  y26:2, monthly:[0,0,0,1,0,0,1,0]},
-  {g:'내장공사', y25:0,  y26:0, monthly:[0,0,0,0,0,0,0,0]},
-  {g:'부대토목', y25:0,  y26:1, monthly:[0,0,0,0,1,0,0,0]},
-  {g:'기타',    y25:0,  y26:0, monthly:[0,0,0,0,0,0,0,0]},
+  {g:'골조공사', y25:20, y26:10, monthly:[0,0,5,0,0,3,0,2,0]},
+  {g:'기계설비', y25:12, y26:4, monthly:[0,0,0,0,2,1,1,0,0]},
+  {g:'전기설비', y25:4,  y26:0, monthly:[0,0,0,0,0,0,0,0,0]},
+  {g:'조적공사', y25:2,  y26:3, monthly:[0,0,3,0,0,0,0,0,0]},
+  {g:'미장공사', y25:0,  y26:0, monthly:[0,0,0,0,0,0,0,0,0]},
+  {g:'방수공사', y25:2,  y26:0, monthly:[0,0,0,0,0,0,0,0,0]},
+  {g:'타일공사', y25:3,  y26:1, monthly:[1,0,0,0,0,0,0,0,0]},
+  {g:'도장공사', y25:5,  y26:1, monthly:[0,1,0,0,0,0,0,0,0]},
+  {g:'금속천장', y25:0,  y26:3, monthly:[0,0,0,1,0,0,1,0,1]},
+  {g:'내장공사', y25:0,  y26:0, monthly:[0,0,0,0,0,0,0,0,0]},
+  {g:'부대토목', y25:0,  y26:1, monthly:[0,0,0,0,1,0,0,0,0]},
+  {g:'기타',    y25:0,  y26:0, monthly:[0,0,0,0,0,0,0,0,0]},
 ];
 
 const performance = [
-  {label:'건축',  plan:133, targetSites:36, monthly:[[1,1],[6,5],[19,10],[16,8],[16,8],[12,9],[18,10],[10,6]], totalCount:98, totalSites:24, rate:98/133},
-  {label:'인프라', plan:25,  targetSites:15, monthly:[[0,0],[0,0],[3,2],[2,1],[2,1],[1,1],[2,1],[4,2]], totalCount:14, totalSites:7,  rate:14/25},
+  {label:'건축',  plan:133, targetSites:36, monthly:[[1,1],[6,5],[19,10],[16,8],[16,8],[12,9],[18,10],[10,6],[9,7]], totalCount:107, totalSites:26, rate:107/133},
+  {label:'인프라', plan:25,  targetSites:15, monthly:[[0,0],[0,0],[3,2],[2,1],[2,1],[1,1],[2,1],[4,2],[4,2]], totalCount:18, totalSites:9,  rate:18/25},
 ];
 
 /* ============ Chart.js 공통 설정 ============ */
@@ -417,7 +503,7 @@ const ncrDelta = totalNcr26-totalNcr25;
 const archPerf = performance[0], infraPerf = performance[1];
 
 const kpis = [
-  {label:'1~8월 점검 누계', value:totalInsp, unit:'건'},
+  {label:'1~9월 점검 누계', value:totalInsp, unit:'건'},
   {label:'건축 이행율', value:(archPerf.rate*100).toFixed(1), unit:'%'},
   {label:'인프라 이행율', value:(infraPerf.rate*100).toFixed(1), unit:'%'},
   {label:'NCR 발행 (26년)', value:totalNcr26, unit:'건', delta:ncrDelta},
@@ -495,7 +581,7 @@ new Chart(document.getElementById('pacechart'), {
       tooltip:{callbacks:{
         afterBody:(items)=>{
           const r = inspection[items[0].dataIndex];
-          return `정상진도(66.7%): ${r.expected.toFixed(1)}건`;
+          return `정상진도(75.0%): ${r.expected.toFixed(1)}건`;
         }
       }}
     },
@@ -505,7 +591,7 @@ new Chart(document.getElementById('pacechart'), {
 
 (function(){
   const t = document.getElementById('paceTable');
-  let head = '<tr><th>카테고리</th><th>연간계획</th><th>누계실적</th><th>이행율</th><th>정상진도(66.7%)</th><th>과부족</th></tr>';
+  let head = '<tr><th>카테고리</th><th>연간계획</th><th>누계실적</th><th>이행율</th><th>정상진도(75.0%)</th><th>과부족</th></tr>';
   let body = '';
   inspection.forEach(r=>{
     const gapCls = r.gap>=0 ? '' : 'hot';
@@ -529,6 +615,7 @@ const rechecks = [
   {site:'창원센트럴',      item:'Target 도장',      firstDate:'2026-02-11', firstScore:92.9, firstGrade:'A', reDate:'2026-07-01', reScore:92.9, reGrade:'A'},
   {site:'호현센트럴',      item:'Target 골조1',     firstDate:'2026-06-02', firstScore:86.7, firstGrade:'B', reDate:'2026-07-08', reScore:98.5, reGrade:'S'},
   {site:'서산센트럴',      item:'Target 도장',      firstDate:null,          firstScore:null, firstGrade:null, reDate:'2026-07-10', reScore:90,   reGrade:'A'},
+  {site:'서산센트럴',      item:'Target 금속천장',  firstDate:'2026-07-10', firstScore:84.44, firstGrade:'C', reDate:'2026-09-04', reScore:100,  reGrade:'S'},
 ];
 (function(){
   const t = document.getElementById('recheckTable');
@@ -590,17 +677,17 @@ const ncrPartner = [
   {partner:'레오개발(주)',     count:6, cats:['골조'],        sites:['서울원(MXD)','호현센트럴']},
   {partner:'(주)휘강건설',     count:2, cats:['골조'],        sites:['서울원(MXD)']},
   {partner:'해성산업개발(주)', count:2, cats:['기계'],        sites:['서산센트럴']},
+  {partner:'(주)스페이스체인지', count:2, cats:['금속천장'],  sites:['강변역센트럴','군산레이크시티']},
+  {partner:'(주)우설건설',     count:2, cats:['골조'],        sites:['울산반구동']},
   {partner:'성실건업(주)',     count:1, cats:['타일'],        sites:['강릉오션시티']},
   {partner:'엘림피엔씨(주)',   count:1, cats:['도장'],        sites:['창원센트럴']},
   {partner:'(주)원산건설',     count:1, cats:['조적'],        sites:['가경6단지']},
   {partner:'진명건설(주)',     count:1, cats:['조적'],        sites:['대연THE IL']},
   {partner:'성원개발(주)',     count:1, cats:['조적'],        sites:['대연THE IL']},
-  {partner:'(주)스페이스체인지', count:1, cats:['금속천장'],  sites:['강변역센트럴']},
   {partner:'엠케이지',         count:1, cats:['기계'],        sites:['서울원(MXD)']},
   {partner:'우림아이앤씨(주)', count:1, cats:['금속천장'],    sites:['서산센트럴']},
   {partner:'진흥설비(주)',     count:1, cats:['기계'],        sites:['군산레이크시티']},
   {partner:'아인건설(주)',     count:1, cats:['부대토목'],    sites:['서산센트럴']},
-  {partner:'(주)우설건설',     count:2, cats:['골조'],        sites:['울산반구동']},
 ];
 
 new Chart(document.getElementById('ncrPartner'), {
@@ -751,6 +838,136 @@ new Chart(document.getElementById('perfStack'), {
   const sumCells = sumMonthly.map(m=>`<td>${m[0]}</td><td>${m[1]}</td>`).join('');
   body += `<tr class="total"><td>건축+인프라</td><td>${sumPlan}</td><td>${sumTarget}</td>${sumCells}<td>${sumCount}</td><td>${sumSites}</td><td>${(sumRate*100).toFixed(1)}%</td></tr>`;
   t.innerHTML = head+body;
+})();
+
+/* ============ 대외기관 수검 현황 ============ */
+const ext25Monthly = [0,1,4,2,7,2,1,2,9,3,2,2];   // 25년 월별 수검 횟수(대외점검현황 기준)
+const extFine = 0;                                // 26년 과태료+벌점 합계
+const extRows = [
+  {"d": "2026-03-09", "site": "현대해상 일산사옥", "org": "서울지방국토관리청", "cls": "국토부", "name": "해빙기안전점검", "g": "건축", "f": false, "fc": "", "ft": "", "fd": "", "cert": false, "cs": ""},
+  {"d": "2026-03-16", "site": "천안아이파크시티 2단지", "org": "대전지방국토관리청", "cls": "국토부", "name": "해빙기안전점검", "g": "건축", "f": true, "fc": "품질관리", "ft": "거푸집철근", "fd": "철근 청소 미흡", "cert": true, "cs": "조치완료(4/20)"},
+  {"d": "2026-03-16", "site": "천안아이파크시티 2단지", "org": "대전지방국토관리청", "cls": "국토부", "name": "해빙기안전점검", "g": "건축", "f": true, "fc": "안전관리", "ft": "추락방지", "fd": "난간미설치", "cert": true, "cs": "조치완료(4/20)"},
+  {"d": "2026-03-16", "site": "천안아이파크시티 2단지", "org": "대전지방국토관리청", "cls": "국토부", "name": "해빙기안전점검", "g": "건축", "f": true, "fc": "품질관리", "ft": "거푸집철근", "fd": "철근 결속 미흡", "cert": true, "cs": "조치완료(4/20)"},
+  {"d": "2026-03-16", "site": "천안아이파크시티 2단지", "org": "대전지방국토관리청", "cls": "국토부", "name": "해빙기안전점검", "g": "건축", "f": true, "fc": "품질관리", "ft": "시스템비계", "fd": "동바리설치 미흡", "cert": true, "cs": "조치완료(4/20)"},
+  {"d": "2026-03-16", "site": "천안아이파크시티 2단지", "org": "대전지방국토관리청", "cls": "국토부", "name": "해빙기안전점검", "g": "건축", "f": true, "fc": "품질관리", "ft": "거푸집철근", "fd": "피복두께 미확보", "cert": true, "cs": "조치완료(4/20)"},
+  {"d": "2026-04-07", "site": "서울원상업업무시설(CB)", "org": "서울시", "cls": "지자체", "name": "굴토공사장점검", "g": "건축", "f": true, "fc": "품질관리", "ft": "거푸집철근", "fd": "노출철근보양", "cert": false, "cs": ""},
+  {"d": "2026-04-08", "site": "용현학익 1블럭 부지조성공사", "org": "인천시", "cls": "지자체", "name": "비산먼지발생사업장", "g": "인프라", "f": false, "fc": "", "ft": "", "fd": "", "cert": false, "cs": ""},
+  {"d": "2026-04-16", "site": "보문센트럴아이파크", "org": "서울시", "cls": "지자체", "name": "하도급실태점검", "g": "건축", "f": false, "fc": "", "ft": "", "fd": "", "cert": false, "cs": ""},
+  {"d": "2026-04-27", "site": "서울원상업업무시설(CB)", "org": "서울시", "cls": "지자체", "name": "지하안전평가 현장 점검", "g": "건축", "f": false, "fc": "", "ft": "", "fd": "", "cert": false, "cs": ""},
+  {"d": "2026-06-08", "site": "운정아이파크시티", "org": "파주시청", "cls": "지자체", "name": "우기대비 특별점검", "g": "건축", "f": false, "fc": "", "ft": "", "fd": "", "cert": false, "cs": ""},
+  {"d": "2026-06-11", "site": "인덕원-동탄 복선전철 제12공구 노반공사 기타공사", "org": "지방국토관리청", "cls": "국토부", "name": "우기대비 특별점검", "g": "인프라", "f": false, "fc": "", "ft": "", "fd": "", "cert": false, "cs": ""},
+  {"d": "2026-06-11", "site": "서울원상업업무시설(CB)", "org": "서울시", "cls": "지자체", "name": "굴토공사장점검", "g": "건축", "f": true, "fc": "품질관리", "ft": "가시설", "fd": "흙막이벽체균열 보수", "cert": false, "cs": ""},
+  {"d": "2026-06-11", "site": "서울원상업업무시설(CB)", "org": "서울시", "cls": "지자체", "name": "굴토공사장점검", "g": "건축", "f": true, "fc": "품질관리", "ft": "거푸집철근", "fd": "합벽 철근간격 및 SRC기둥 띠철근 절곡 불량 교체", "cert": false, "cs": ""},
+  {"d": "2026-07-03", "site": "서울원상업업무시설(CB)", "org": "서울지방국토관리청", "cls": "국토부", "name": "우기대비 특별점검", "g": "건축", "f": true, "fc": "안전계획", "ft": "정기안전점검", "fd": "CSI 등록지연", "cert": false, "cs": ""},
+  {"d": "2026-07-03", "site": "서울원상업업무시설(CB)", "org": "서울지방국토관리청", "cls": "국토부", "name": "우기대비 특별점검", "g": "건축", "f": true, "fc": "품질관리", "ft": "콘크리트", "fd": "균열관리 미흡", "cert": false, "cs": ""},
+  {"d": "2026-07-28", "site": "현대해상 일산사옥", "org": "서울지방국토관리청", "cls": "국토부", "name": "우기대비 특별점검", "g": "건축", "f": false, "fc": "", "ft": "", "fd": "", "cert": false, "cs": ""},
+  {"d": "2026-08-04", "site": "용현학익 1블럭 부지조성공사", "org": "한국도로공사", "cls": "국토부", "name": "비관리청공사 점검", "g": "인프라", "f": false, "fc": "", "ft": "", "fd": "", "cert": false, "cs": ""},
+  {"d": "2026-08-25", "site": "서울원상업업무시설(CB)", "org": "노원구청", "cls": "지자체", "name": "굴토공사장점검", "g": "건축", "f": false, "fc": "", "ft": "", "fd": "", "cert": false, "cs": ""},
+  {"d": "2026-09-18", "site": "서울원상업업무시설(CB)", "org": "노원구청", "cls": "지자체", "name": "굴토공사장점검", "g": "건축", "f": false, "fc": "", "ft": "", "fd": "", "cert": false, "cs": ""}
+];
+(function(){
+  const NM = MONTHS.length;
+  const keyOf = r=>r.d+'|'+r.site+'|'+r.name;
+  const monthOf = r=>+r.d.slice(5,7);
+  const insp = [], seen = {};
+  extRows.forEach(r=>{ const k=keyOf(r); if(!seen[k]){ seen[k]=1; insp.push(r); } });
+  const finds = extRows.filter(r=>r.f);
+  const issued = finds.filter(r=>r.cert);
+  const unissued = finds.filter(r=>!r.cert);
+  const countBy = (arr, fn)=>{ const m={}; arr.forEach(x=>{ const k=fn(x); m[k]=(m[k]||0)+1; }); return m; };
+  const sorted = o=>Object.entries(o).sort((a,b)=>b[1]-a[1]);
+
+  /* KPI */
+  const prevSame = ext25Monthly.slice(0,NM).reduce((a,b)=>a+b,0);
+  const doneNote = (issued.find(r=>r.cs)||{}).cs || '';
+  const unSites = Array.from(new Set(unissued.map(r=>r.site)));
+  const fcCnt = countBy(finds, r=>r.fc);
+  const kpis = [
+    {label:'1~9월 수검 횟수', value:insp.length, unit:'회', sub:'25년 동기간 '+prevSame+'회', cls:'flat'},
+    {label:'지적사항', value:finds.length, unit:'건', sub:Object.entries(fcCnt).map(e=>e[0]+' '+e[1]).join(' · '), cls:'flat'},
+    {label:'확인서 발급', value:issued.length, unit:'건', sub:doneNote, cls:'flat'},
+    {label:'확인서 미발급', value:unissued.length, unit:'건', sub:unSites.join(', '), cls:'down'},
+    {label:'과태료·벌점', value:extFine, unit:'건', sub:extFine===0?'부과 내역 없음':'부과 내역 있음', cls:extFine===0?'up':'down'},
+  ];
+  const kpiRow = document.getElementById('extKpi');
+  kpis.forEach((k,i)=>{
+    const el = document.createElement('div');
+    el.className='kpi'; el.dataset.idx = String(i+1).padStart(2,'0');
+    el.innerHTML = '<div class="label">'+k.label+'</div><div class="value">'+k.value+'<small> '+k.unit+'</small></div><div class="delta '+k.cls+'">'+k.sub+'</div>';
+    kpiRow.appendChild(el);
+  });
+
+  /* 월별 25 vs 26 */
+  const monthly = MONTHS.map((_,i)=>insp.filter(r=>monthOf(r)===i+1).length);
+  new Chart(document.getElementById('extMonthly'), {
+    type:'bar',
+    data:{labels:MONTHS, datasets:[
+      {label:'25년', data:ext25Monthly.slice(0,NM), backgroundColor:'#9aa8bd', borderRadius:2, maxBarThickness:18},
+      {label:'26년', data:monthly, backgroundColor:'#d15a30', borderRadius:2, maxBarThickness:18},
+    ]},
+    options:{responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{position:'bottom', labels:{boxWidth:10,padding:12,font:{size:12}}}},
+      scales:{x:{grid:{display:false}}, y:{grid:{color:GRID}, beginAtZero:true, ticks:{stepSize:1}}}}
+  });
+
+  /* 점검기관별 (국토부 계열 / 지자체) */
+  const orgCls = {}; insp.forEach(r=>{ orgCls[r.org]=r.cls; });
+  const orgEntries = sorted(countBy(insp, r=>r.org));
+  const clsList = Array.from(new Set(orgEntries.map(e=>orgCls[e[0]])));
+  const clsColor = {'국토부':'#1f9bb3','지자체':'#c2557e'};
+  new Chart(document.getElementById('extOrg'), {
+    type:'bar',
+    data:{labels:orgEntries.map(e=>e[0]), datasets: clsList.map(c=>({
+      label: c==='국토부' ? '국토부 계열' : c,
+      data: orgEntries.map(e=>orgCls[e[0]]===c ? e[1] : 0),
+      backgroundColor: clsColor[c]||'#56637a', stack:'s', borderRadius:2, maxBarThickness:16}))},
+    options:{indexAxis:'y', responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{position:'bottom', labels:{boxWidth:10,padding:12,font:{size:12}}}},
+      scales:{x:{stacked:true, grid:{color:GRID}, beginAtZero:true, ticks:{stepSize:1}},
+              y:{stacked:true, grid:{display:false}, ticks:{font:{size:11}, autoSkip:false}}}}
+  });
+
+  /* 점검 유형별 */
+  const typeEntries = sorted(countBy(insp, r=>r.name));
+  new Chart(document.getElementById('extType'), {
+    type:'bar',
+    data:{labels:typeEntries.map(e=>e[0]), datasets:[{data:typeEntries.map(e=>e[1]), backgroundColor:'#2f9070', borderRadius:2, maxBarThickness:16}]},
+    options:{indexAxis:'y', responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}},
+      scales:{x:{grid:{color:GRID}, beginAtZero:true, ticks:{stepSize:1}}, y:{grid:{display:false}, ticks:{font:{size:11}, autoSkip:false}}}}
+  });
+
+  /* 지적 종류별 */
+  const findEntries = sorted(countBy(finds, r=>r.ft||'기타'));
+  new Chart(document.getElementById('extFinding'), {
+    type:'bar',
+    data:{labels:findEntries.map(e=>e[0]), datasets:[{data:findEntries.map(e=>e[1]), backgroundColor:'#c94257', borderRadius:2, maxBarThickness:16}]},
+    options:{indexAxis:'y', responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}},
+      scales:{x:{grid:{color:GRID}, beginAtZero:true, ticks:{stepSize:1}}, y:{grid:{display:false}, ticks:{font:{size:11}, autoSkip:false}}}}
+  });
+
+  /* 현장별 표 */
+  const siteStat = {};
+  insp.forEach(r=>{ const s = siteStat[r.site] || (siteStat[r.site]={g:r.g, n:0, f:0, i:0, u:0}); s.n++; });
+  finds.forEach(r=>{ const s = siteStat[r.site]; s.f++; if(r.cert) s.i++; else s.u++; });
+  const siteRows = Object.entries(siteStat).sort((a,b)=> b[1].n-a[1].n || b[1].f-a[1].f);
+  let sh = '<tr><th class="tl">현장명</th><th>구분</th><th>수검(회)</th><th>지적(건)</th><th>확인서 발급</th><th>미발급</th></tr>';
+  let sb = '';
+  siteRows.forEach(e=>{ const s=e[1];
+    sb += '<tr><td>'+e[0]+'</td><td>'+s.g+'</td><td><b>'+s.n+'</b></td><td>'+(s.f||'-')+'</td><td>'+(s.i||'-')+'</td><td class="'+(s.u?'hot':'')+'">'+(s.u||'-')+'</td></tr>';
+  });
+  sb += '<tr class="total"><td>합계</td><td></td><td>'+insp.length+'</td><td>'+finds.length+'</td><td>'+issued.length+'</td><td>'+unissued.length+'</td></tr>';
+  document.getElementById('extSiteTable').innerHTML = sh + sb;
+
+  /* 수검 내역 표 */
+  let dh = '<tr><th>월</th><th>No</th><th class="tl">현장명</th><th class="tl">점검기관</th><th class="tl">점검명</th><th class="tl">지적사항</th><th>확인서</th></tr>';
+  let db = '', no = 0, prevKey = '', prevM = 0;
+  extRows.forEach(r=>{
+    const k = keyOf(r), firstRow = (k!==prevKey); if(firstRow) no++; prevKey = k;
+    const m = monthOf(r), mLabel = (m!==prevM) ? m+'월' : ''; prevM = m;
+    const warn = r.f && !r.cert;
+    db += '<tr class="'+(warn?'row-warn':'')+'"><td>'+mLabel+'</td><td>'+(firstRow?no:'')+'</td><td class="tl">'+r.site+'</td><td class="tl">'+r.org+'</td><td class="tl">'+r.name+'</td><td class="tl">'+(r.f?(r.fd||r.ft):'없음')+'</td><td class="tc '+(warn?'cert-warn':'')+'">'+((r.f&&r.cert)?'발급':'-')+'</td></tr>';
+  });
+  document.getElementById('extTable').innerHTML = dh + db;
 })();
 
 /* ============ 편집 모드 / Firestore 동기화 ============ */
